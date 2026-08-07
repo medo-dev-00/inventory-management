@@ -37,7 +37,6 @@ export default function ProductsTable({
     if (filteredProduct) {
       setShowForm(true);
       setProductInfo(filteredProduct);
-      setId(undefined);
     }
   }
   return (
