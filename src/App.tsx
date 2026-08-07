@@ -6,7 +6,7 @@ import Products from "./pages/Pruducts";
 import Header from "./components/Header";
 import AddProduct from "./components/AddProduct";
 import ProductProvider from "./context/ProductsProvider";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import type { Product } from "./context/ProductsContext";
@@ -71,6 +71,8 @@ function App() {
                   />
                 }
               />
+              {/* Default Route */}
+              <Route path="*" element={<Navigate to={"/dashboard"} />} />
             </Routes>
             <AddProduct
               showForm={showForm}

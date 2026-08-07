@@ -28,6 +28,7 @@ export default function ProductsTable({
       localStorage.setItem("products", JSON.stringify(filteredProducts));
       setIsModalOpen(false);
       toast.success("تم حذف المنتج بنجاح");
+      setId(undefined);
     }
   }
 
@@ -36,6 +37,7 @@ export default function ProductsTable({
     if (filteredProduct) {
       setShowForm(true);
       setProductInfo(filteredProduct);
+      setId(undefined);
     }
   }
   return (

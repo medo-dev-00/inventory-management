@@ -106,7 +106,7 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
                       value="مشروبات"
                       className="bg-[#f8f9ff] hover:bg-[#f8f9ff]"
                     >
-                      مأكولات
+                      مشروبات
                     </option>
                   </select>
                 </div>
