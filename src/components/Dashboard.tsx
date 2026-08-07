@@ -1,4 +1,10 @@
-export default function Dashboard() {
+import type { Dispatch } from "react";
+
+export default function Dashboard({
+  setShowForm,
+}: {
+  setShowForm: Dispatch<React.SetStateAction<boolean>>;
+}) {
   return (
     <section className="flex-1 pt-10 px-10 relative min-h-[90vh]">
       <h1 className="text-7xl mb-10">لوحة التحكم</h1>
@@ -8,7 +14,7 @@ export default function Dashboard() {
             <h2 className="text-xl font-semibold text-gray-500">
               جميع المنتجات
             </h2>
-            <h3 className="text-3xl font-bold">0</h3>
+            <h3 className="text-3xl font-bold"></h3>
           </div>
           <div className="p-3 rounded-xl bg-[#E5EEFF] text-[#003980]">
             <svg
@@ -169,9 +175,9 @@ export default function Dashboard() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#ffffff"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               className="lucide lucide-plus-icon lucide-plus"
             >
               <path d="M5 12h14" />
@@ -179,7 +185,10 @@ export default function Dashboard() {
             </svg>
             اضافة منتج
           </button>
-          <button className="bg-[#D3E4FE] rounded-xl px-6 py-2 flex gap-2 font-semibold cursor-pointer hover:scale-102 transition-all">
+          <button
+            className="bg-[#D3E4FE] rounded-xl px-6 py-2 flex gap-2 font-semibold cursor-pointer hover:scale-102 transition-all"
+            onClick={() => setShowForm(true)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
