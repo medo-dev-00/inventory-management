@@ -2,8 +2,6 @@
 import { useState, type Dispatch } from "react";
 // Libraries
 
-// Framer Motion
-import { motion } from "motion/react";
 // Unique ID
 import { v4 as uuidv4 } from "uuid";
 // Toast Notification
