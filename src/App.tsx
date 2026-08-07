@@ -1,36 +1,86 @@
 import "./App.css";
+import { v4 as uuidv4 } from "uuid";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
 import Products from "./pages/Pruducts";
 import Header from "./components/Header";
 import AddProduct from "./components/AddProduct";
 import ProductProvider from "./context/ProductsProvider";
-import { Routes, Route } from "react-router-dom";
-
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-import { useState } from "react";
+import type { Product } from "./context/ProductsContext";
+
 function App() {
+  const location = useLocation();
+  const date = new Intl.DateTimeFormat("ar-EG", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
+
+  console.log(date);
   const [showForm, setShowForm] = useState(false);
+  const [productInfo, setProductInfo] = useState<Product>({
+    id: uuidv4(),
+    name: "",
+    description: "",
+    category: "مأكولات",
+    buyPrice: 0,
+    sellPrice: 0,
+    quantity: 0,
+    minStock: 0,
+    image: null,
+    createdAt: date,
+  });
+  const [id, setId] = useState<string | undefined>();
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShowForm(false);
+  }, [location.pathname]);
+
   return (
     <ProductProvider>
       <Toaster position="top-center" />
-      <main dir="rtl" className="flex min-h-dvh">
+      <main dir="rtl" className="flex min-h-dvh overflow-hidden">
         <Sidebar />
 
-        <div className="w-full flex-1 h-full">
+        <div className="relative w-full flex-1 h-full">
           <Header />
           <div className="relative">
             <Routes>
               <Route
                 path="/dashboard"
-                element={<Dashboard setShowForm={setShowForm} />}
+                element={
+                  <Dashboard
+                    setShowForm={setShowForm}
+                    id={id}
+                    setId={setId}
+                    setProductInfo={setProductInfo}
+                  />
+                }
               />
               <Route
                 path="/products"
-                element={<Products setShowForm={setShowForm} />}
+                element={
+                  <Products
+                    setShowForm={setShowForm}
+                    setProductInfo={setProductInfo}
+                    id={id}
+                    setId={setId}
+                  />
+                }
               />
             </Routes>
-            <AddProduct showForm={showForm} setShowForm={setShowForm} />
+            <AddProduct
+              showForm={showForm}
+              setShowForm={setShowForm}
+              productInfo={productInfo}
+              setProductInfo={setProductInfo}
+              id={id}
+              setId={setId}
+              date={date}
+            />
           </div>
         </div>
       </main>

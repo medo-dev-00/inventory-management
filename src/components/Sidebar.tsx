@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 // Icons
 import { MdOutlineDashboard } from "react-icons/md";
 import { FaBoxArchive } from "react-icons/fa6";
-import { LuShapes } from "react-icons/lu";
+// import { LuShapes } from "react-icons/lu";
 
 export default function Sidebar() {
   return (
@@ -31,7 +31,7 @@ export default function Sidebar() {
           <FaBoxArchive size={30} className="min-w-8" />
           المنتجات
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to="/categories"
           className={({ isActive }) =>
             `text-xl flex items-center gap-4 p-3 rounded-md transition-all   ${
@@ -41,7 +41,7 @@ export default function Sidebar() {
         >
           <LuShapes size={30} className="min-w-8" />
           الفئات
-        </NavLink>
+        </NavLink> */}
       </ul>
     </nav>
   );

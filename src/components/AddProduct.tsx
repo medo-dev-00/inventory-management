@@ -1,103 +1,173 @@
-// React Hooks
-import { useState, type Dispatch } from "react";
-// Libraries
+// React
+import { type Dispatch } from "react";
 
-// Unique ID
+// Libraries
 import { v4 as uuidv4 } from "uuid";
-// Toast Notification
 import toast from "react-hot-toast";
-// Products Hook
+
+// Hooks
 import { useProducts } from "../hooks/useProducts";
-// Products Type
-import { type Product } from "../context/ProductsContext";
-// Product Form
+
+// Components
 import ProductForm from "./ProductForm";
+
 // Icons
 import { FaArrowRight } from "react-icons/fa6";
 import { FaRegSave } from "react-icons/fa";
 
-export default function AddProduct({
-  showForm,
-  setShowForm,
-}: {
+// Types
+import type { Product } from "../context/ProductsContext";
+
+interface AddProductProps {
+  productInfo: Product;
+  setProductInfo: Dispatch<React.SetStateAction<Product>>;
   showForm: boolean;
   setShowForm: Dispatch<React.SetStateAction<boolean>>;
-}) {
-  // Product Info
-  const [productInfo, setProductInfo] = useState<Product>({
-    id: uuidv4(),
-    name: "",
-    description: "",
-    category: "مأكولات",
-    buyPrice: 0,
-    sellPrice: 0,
-    quantity: 0,
-    minStock: 0,
-    image: null,
-  });
-  // All Products
-  const { products, setProducts } = useProducts();
-  // Handle INput Changes
+  id?: string | undefined;
+  setId: Dispatch<React.SetStateAction<string | undefined>>;
+  date: string;
+}
 
-  // Read The Photo
-  const addProduct = () => {
-    if (
-      productInfo.name.length > 2 &&
-      productInfo.sellPrice > 0 &&
-      productInfo.quantity > 0
-    ) {
-      const newProducts = [...products, productInfo];
-      setProducts(newProducts);
-      setProductInfo({
-        id: uuidv4(),
-        name: "",
-        description: "",
-        category: "",
-        buyPrice: 0,
-        sellPrice: 0,
-        quantity: 0,
-        minStock: 0,
-        image: null,
-      });
-      toast.success("تمت اضافة المنتج بنجاح");
-      localStorage.setItem("products", JSON.stringify(newProducts));
-    } else toast.error("يجب ادخال الييانات المطلوبة");
+export default function AddProduct({
+  productInfo,
+  setProductInfo,
+  showForm,
+  setShowForm,
+  id,
+  setId,
+  date,
+}: AddProductProps) {
+  const { products, setProducts } = useProducts();
+
+  const resetForm = () => {
+    setProductInfo({
+      id: uuidv4(),
+      name: "",
+      description: "",
+      category: "مأكولات",
+      buyPrice: 0,
+      sellPrice: 0,
+      quantity: 0,
+      minStock: 0,
+      image: null,
+      createdAt: date,
+    });
   };
+
+  const handleSaveProduct = () => {
+    // Validation
+    if (
+      productInfo.name.trim().length < 3 ||
+      productInfo.sellPrice <= 0 ||
+      productInfo.quantity < 0
+    ) {
+      toast.error("يجب إدخال البيانات المطلوبة");
+      return;
+    }
+
+    let updatedProducts: Product[];
+
+    // =========================
+    // EDIT PRODUCT
+    // =========================
+    if (id) {
+      updatedProducts = products.map((product) =>
+        product.id === id
+          ? {
+              ...productInfo,
+              id,
+            }
+          : product,
+      );
+
+      toast.success("تم تعديل المنتج بنجاح");
+      setId(undefined);
+    }
+
+    // =========================
+    // ADD PRODUCT
+    // =========================
+    else {
+      const newProduct: Product = {
+        ...productInfo,
+        id: uuidv4(),
+        createdAt: new Date().toISOString(),
+      };
+
+      updatedProducts = [...products, newProduct];
+
+      toast.success("تمت إضافة المنتج بنجاح");
+      setId(undefined);
+    }
+
+    // Update Context
+    setProducts(updatedProducts);
+
+    // Update LocalStorage
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+
+    // Reset Form
+    resetForm();
+
+    // Close Form
+    setShowForm(false);
+  };
+
   return (
     <section
-      className={`bg-[#f7f9fd] pt-10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full h-full px-4  ${showForm ? "max-w-full z-50 opacity-100" : " max-w-0 -z-10 opacity-0 overflow-hidden"} transition-all`}
+      className={`absolute top-1/2 z-50 h-full w-full -translate-x-1/2 -translate-y-1/2 bg-[#f7f9fd] px-4 py-10 transition-all duration-300 ${
+        showForm ? "left-1/2 opacity-100" : "left-[200vw] opacity-0"
+      }`}
     >
-      <div className="flex gap-5 px-4 bg-inherit">
+      {/* Header */}
+      <div className="pr-8 flex max-w-7xl items-center gap-4">
         <button
-          className="hover:translate-x-1 transition-all cursor-pointer"
+          type="button"
           onClick={() => setShowForm(false)}
+          className="flex cursor-pointer items-center gap-2 transition-all hover:translate-x-1"
         >
-          <FaArrowRight size={30} color="#3F4944" />
+          <FaArrowRight size={30} />
         </button>
-        <div className="bg-inherit">
-          <h1 className="text-4xl font-bold">إضافة منتج جديد</h1>
-          <p className="text-[#3F4944] text-xl mt-4">
-            أدخل تفاصيل المنتج الجديد لإضافته إلى المخزون
+
+        <div>
+          <h1 className="text-3xl font-bold">
+            {id ? "تعديل المنتج" : "إضافة منتج جديد"}
+          </h1>
+
+          <p className="mt-2 text-gray-500">
+            {id
+              ? "قم بتعديل بيانات المنتج"
+              : "أدخل تفاصيل المنتج الجديد لإضافته إلى المخزون"}
           </p>
         </div>
       </div>
+
+      {/* Form */}
       <ProductForm productInfo={productInfo} setProductInfo={setProductInfo} />
-      <div className="w-full bg-white p-4 rounded-sm shadow-xl flex gap-2 justify-end">
+
+      {/* Actions */}
+      <div className="mx-auto mt-8 flex max-w-7xl justify-end gap-3">
+        {/* Cancel */}
         <button
-          onClick={() => setShowForm(false)}
-          className="text-[#004532] flex gap-2 px-6 py-2 rounded-sm border cursor-pointer hover:scale-102 hover:bg-gray-100 transition-all"
+          type="button"
+          onClick={() => {
+            setId(undefined);
+            setShowForm(false);
+          }}
+          className="flex cursor-pointer items-center gap-2 rounded-sm border border-gray-300 px-6 py-2 text-[#004532] transition-all hover:scale-[1.02] hover:bg-gray-100"
         >
-          الغاء
+          إلغاء
         </button>
 
+        {/* Save */}
         <button
-          onClick={() => {
-            addProduct();
-          }}
-          className={`opacity-100 cursor-pointer hover:scale-102 bg-[#004532] text-white flex gap-2 px-4 py-2 rounded-sm items-center  transition-all`}
+          type="button"
+          onClick={handleSaveProduct}
+          className="flex cursor-pointer items-center gap-2 rounded-sm bg-[#004532] px-5 py-2 text-white transition-all hover:scale-[1.02] hover:bg-[#00382a]"
         >
           <FaRegSave />
-          حفظ المنتج
+
+          {id ? "حفظ التعديلات" : "حفظ المنتج"}
         </button>
       </div>
     </section>

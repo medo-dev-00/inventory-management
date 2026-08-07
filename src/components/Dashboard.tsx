@@ -1,10 +1,39 @@
 import type { Dispatch } from "react";
-
+import { useProducts } from "../hooks/useProducts";
+import ProductsTable from "./ProductsTable";
+import { useEffect } from "react";
+import { type Product } from "../context/ProductsContext";
 export default function Dashboard({
+  id,
+  setId,
+  setProductInfo,
   setShowForm,
 }: {
   setShowForm: Dispatch<React.SetStateAction<boolean>>;
+  setProductInfo: Dispatch<React.SetStateAction<Product>>;
+  id: string | undefined;
+  setId: Dispatch<React.SetStateAction<string | undefined>>;
 }) {
+  const { products } = useProducts();
+  const { setProducts } = useProducts();
+  useEffect(() => {
+    const storageProducts: string | null = localStorage.getItem("products");
+    if (storageProducts) {
+      setProducts(JSON.parse(storageProducts));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // Categories Count
+  const categories = [...new Set(products.map((product) => product.category))];
+  // MinStock Categories Count
+  const minStockProducts = products.filter((product) => {
+    return product.quantity <= product.minStock;
+  });
+  // OutOfStock Products Count
+  const outOfStockProducts = products.filter((product) => {
+    return product.quantity <= 0;
+  });
+
   return (
     <section className="flex-1 pt-10 px-10 relative min-h-[90vh]">
       <h1 className="text-7xl mb-10">لوحة التحكم</h1>
@@ -14,7 +43,7 @@ export default function Dashboard({
             <h2 className="text-xl font-semibold text-gray-500">
               جميع المنتجات
             </h2>
-            <h3 className="text-3xl font-bold"></h3>
+            <h3 className="text-3xl font-bold">{products.length}</h3>
           </div>
           <div className="p-3 rounded-xl bg-[#E5EEFF] text-[#003980]">
             <svg
@@ -38,7 +67,7 @@ export default function Dashboard({
         <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card">
           <div>
             <h2 className="text-xl font-semibold text-gray-500">التصنيفات</h2>
-            <h3 className="text-3xl font-bold">0</h3>
+            <h3 className="text-3xl font-bold">{categories.length}</h3>
           </div>
           <div className="p-3 rounded-xl bg-[#E5EEFF] text-[#003980]">
             <svg
@@ -63,60 +92,9 @@ export default function Dashboard({
         <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card">
           <div>
             <h2 className="text-xl font-semibold text-gray-500">
-              إجمالي المبيعات
-            </h2>
-            <h3 className="text-3xl font-bold">0</h3>
-          </div>
-          <div className="p-3 rounded-xl bg-[#E5EEFF] text-[#003980]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              className="lucide lucide-wallet-minimal-icon lucide-wallet-minimal"
-            >
-              <path d="M17 14h.01" />
-              <path d="M7 7h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14" />
-            </svg>
-          </div>
-        </div>
-        <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-500">
-              مبيعات اليوم
-            </h2>
-            <h3 className="text-3xl font-bold">0</h3>
-          </div>
-          <div className="p-3 rounded-xl bg-[#E5EEFF] text-[#003980]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              className="lucide lucide-badge-dollar-sign-icon lucide-badge-dollar-sign"
-            >
-              <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-              <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
-              <path d="M12 18V6" />
-            </svg>
-          </div>
-        </div>
-        <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-500">
               المنتجات قليلة الكمية
             </h2>
-            <h3 className="text-3xl font-bold">0</h3>
+            <h3 className="text-3xl font-bold">{minStockProducts.length}</h3>
           </div>
           <div className="p-3 rounded-xl bg-[#ba1a1a1e] text-[#BA1A1A]">
             <svg
@@ -142,7 +120,7 @@ export default function Dashboard({
             <h2 className="text-xl font-semibold text-gray-500">
               المنتجات غير المتوفرة
             </h2>
-            <h3 className="text-3xl font-bold">0</h3>
+            <h3 className="text-3xl font-bold">{outOfStockProducts.length}</h3>
           </div>
           <div className="p-3 rounded-xl bg-[#ba1a1a1e] text-[#BA1A1A]">
             <svg
@@ -163,11 +141,21 @@ export default function Dashboard({
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 flex items-center bg-white shadow-md p-5 rounded-md border border-gray-300">
+      <ProductsTable
+        id={id}
+        position="dashboard"
+        setId={setId}
+        setProductInfo={setProductInfo}
+        setShowForm={setShowForm}
+      />
+      <div className="absolute bottom-10 flex items-center bg-white shadow-md p-5 rounded-md border border-gray-300">
         <h3>اجراءات سريعة</h3>
         <div className="w-0.5 py-3 bg-gray-200 mx-2 rounded-2xl"></div>
         <div className="flex gap-4">
-          <button className="bg-[#004532] text-white rounded-xl px-6 py-2 font-semibold flex gap-2 cursor-pointer hover:scale-102 transition-all ">
+          <button
+            className="bg-[#004532] text-white rounded-xl px-6 py-2 font-semibold flex gap-2 cursor-pointer hover:scale-102 transition-all"
+            onClick={() => setShowForm(true)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
