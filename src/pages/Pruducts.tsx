@@ -5,15 +5,19 @@ import { useProducts } from "../hooks/useProducts";
 import ProductsTable from "../components/ProductsTable";
 import type { Product } from "../context/ProductsContext";
 
+import { motion } from "motion/react";
+import { LuReceipt } from "react-icons/lu";
 export default function Products({
   setProductInfo,
   setShowForm,
   id,
   setId,
+  setShowSaleForm,
 }: {
   setShowForm: Dispatch<React.SetStateAction<boolean>>;
 
   setProductInfo: Dispatch<React.SetStateAction<Product>>;
+  setShowSaleForm: Dispatch<React.SetStateAction<boolean>>;
   id: string | undefined;
   setId: Dispatch<React.SetStateAction<string | undefined>>;
 }) {
@@ -27,7 +31,11 @@ export default function Products({
   }, []);
 
   return (
-    <section className="relative px-10 pt-10">
+    <motion.section
+      className="relative px-10 pt-10"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+    >
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-4xl font-bold">المنتجات</h2>
@@ -35,12 +43,21 @@ export default function Products({
             ادارة المنتجات, المخزون, والاسعار
           </p>
         </div>
-        <button
-          className={`cursor-pointer hover:scale-102 bg-[#004532] text-white flex gap-2 px-5 py-2 rounded-sm items-center transition-all`}
-          onClick={() => setShowForm(true)}
-        >
-          + اضافة المنتج
-        </button>
+        <div className="flex gap-4">
+          <button
+            className={`cursor-pointer hover:scale-102 bg-[#004532] text-white flex gap-2 px-5 py-2 rounded-sm items-center transition-all`}
+            onClick={() => setShowForm(true)}
+          >
+            + اضافة المنتج
+          </button>
+          <button
+            className="bg-[#D3E4FE] cursor-pointer hover:scale-102 text-[#021338] flex gap-2 px-5 py-2 rounded-sm items-center transition-all"
+            onClick={() => setShowSaleForm(true)}
+          >
+            <LuReceipt size={20} className="text-[#293e5d]" />
+            بيع جديد
+          </button>
+        </div>
       </div>
       <ProductsTable
         position="products"
@@ -49,6 +66,6 @@ export default function Products({
         id={id}
         setId={setId}
       />
-    </section>
+    </motion.section>
   );
 }

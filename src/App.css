@@ -35,3 +35,25 @@ table tr {
 table tr td {
   justify-self: start;
 }
+
+nav {
+  width: 100vw;
+  max-width: 84px;
+  transition: 0.3s;
+}
+nav:hover {
+  max-width: 230px;
+}
+
+.link {
+  display: flex;
+  padding: 10px;
+  border-radius: 16px;
+  gap: 10px;
+  align-items: center;
+  font-weight: 600;
+  width: 100%;
+  overflow: hidden;
+  transition: 0.3s;
+  text-wrap: nowrap;
+}

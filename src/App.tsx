@@ -1,7 +1,7 @@
 import "./App.css";
 import { v4 as uuidv4 } from "uuid";
 import Sidebar from "./components/Sidebar";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Pruducts";
 import Header from "./components/Header";
 import AddProduct from "./components/AddProduct";
@@ -10,6 +10,7 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import type { Product } from "./context/ProductsContext";
+import AddSale from "./components/SellProduct";
 
 function App() {
   const location = useLocation();
@@ -21,11 +22,12 @@ function App() {
 
   console.log(date);
   const [showForm, setShowForm] = useState(false);
+  const [showSaleForm, setShowSaleForm] = useState(false);
   const [productInfo, setProductInfo] = useState<Product>({
     id: uuidv4(),
     name: "",
     description: "",
-    category: "مأكولات",
+    category: "/",
     buyPrice: 0,
     sellPrice: 0,
     quantity: 0,
@@ -38,7 +40,6 @@ function App() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowForm(false);
   }, [location.pathname]);
-
   return (
     <ProductProvider>
       <Toaster position="top-center" />
@@ -57,6 +58,7 @@ function App() {
                     id={id}
                     setId={setId}
                     setProductInfo={setProductInfo}
+                    setShowSaleForm={setShowSaleForm}
                   />
                 }
               />
@@ -68,6 +70,7 @@ function App() {
                     setProductInfo={setProductInfo}
                     id={id}
                     setId={setId}
+                    setShowSaleForm={setShowSaleForm}
                   />
                 }
               />
@@ -82,6 +85,10 @@ function App() {
               id={id}
               setId={setId}
               date={date}
+            />
+            <AddSale
+              showSaleForm={showSaleForm}
+              setShowSaleForm={setShowSaleForm}
             />
           </div>
         </div>

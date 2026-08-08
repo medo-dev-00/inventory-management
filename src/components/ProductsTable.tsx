@@ -1,42 +1,64 @@
-import { FaRegImage } from "react-icons/fa6";
-import { useProducts } from "../hooks/useProducts";
+// Hooks
 import { useState, type Dispatch } from "react";
-import toast from "react-hot-toast";
+import { useProducts } from "../hooks/useProducts";
 import type { Product } from "../context/ProductsContext";
+
+// Libraries
+import toast from "react-hot-toast";
+
 // Icons
 import { FaBoxOpen, FaPlus } from "react-icons/fa6";
+import { FaRegImage } from "react-icons/fa6";
+
+// Props Type Interface
+interface Props {
+  setShowForm: Dispatch<React.SetStateAction<boolean>>;
+  position: "dashboard" | "products";
+  setProductInfo: Dispatch<React.SetStateAction<Product>>;
+  id: string | undefined;
+  setId: Dispatch<React.SetStateAction<string | undefined>>;
+}
 export default function ProductsTable({
   setShowForm,
   position,
   setProductInfo,
   id,
   setId,
-}: {
-  setShowForm: Dispatch<React.SetStateAction<boolean>>;
-  position: "dashboard" | "products";
-  setProductInfo: Dispatch<React.SetStateAction<Product>>;
-  id: string | undefined;
-  setId: Dispatch<React.SetStateAction<string | undefined>>;
-}) {
+}: Props) {
+  // Products Context
   const { products, setProducts } = useProducts();
 
+  // Show And Hide Delete Product Dialog | Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Delete Product Function
   function handleDelete(id: string | undefined) {
-    const filteredProducts = products.filter((product) => product.id !== id);
-    if (filteredProducts) {
-      setProducts(filteredProducts);
-      localStorage.setItem("products", JSON.stringify(filteredProducts));
+    // Filter The PRoducts TO Return All The Products But Not Have That Id
+    const updatedProducts = products.filter((product) => product.id !== id);
+    // Updated Products Existed
+    if (updatedProducts) {
+      // Set The New Products
+      setProducts(updatedProducts);
+      // Then Save It To Local Storage
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
+      // Close The Dialog | Modal
       setIsModalOpen(false);
+      // Show Tast Message
       toast.success("تم حذف المنتج بنجاح");
+      // Empty The ID State
       setId(undefined);
     }
   }
-
+  // Handle Edit Function
   function handleEdit(id: string | undefined) {
-    const filteredProduct = products.find((product) => product.id === id);
-    if (filteredProduct) {
+    // Return The Product That We Wan to edit
+    const selectedProduct = products.find((product) => product.id === id);
+    // Selected Products Existed
+    if (selectedProduct) {
+      // Show Edit Form
       setShowForm(true);
-      setProductInfo(filteredProduct);
+      // Then Fill The Form With Information
+      setProductInfo(selectedProduct);
     }
   }
   return (
@@ -101,12 +123,18 @@ export default function ProductsTable({
                     ) : (
                       <FaRegImage className="w-20 h-15 p-2 " />
                     )}
-                    {product.name}
+                    <p>
+                      <span>{product.name}</span>
+                      <br />
+                      <span className="text-gray-500 text-sm tracking-wide">
+                        {product.description}
+                      </span>
+                    </p>
                   </td>
                   <td className="basis-24">{product.category}</td>
                   <td className="basis-24">{product.sellPrice}</td>
                   <td className="basis-24">{product.quantity}</td>
-                  {product.quantity <= product.minStock ? (
+                  {product.quantity === product.minStock ? (
                     <td className="text-[#af9908] bg-[#f59f0b75] px-4 py-1 rounded-2xl font-semibold">
                       قليل
                     </td>
