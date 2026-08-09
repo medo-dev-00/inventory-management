@@ -19,14 +19,18 @@ export default function SalesTable() {
       animate={{ opacity: 100 }}
     >
       {/* Header */}
-      <div className="flex justify-between items-center border-b border-b-gray-200 pb-4">
+      <div className="flex justify-between items-center border-b border-b-gray-200 pb-4 dark:border-b-cyan-950">
         <div>
-          <h2 className="text-4xl font-bold text-[#0b1c30]">سجل المبيعات</h2>
+          <h2 className="text-4xl font-bold text-[#0b1c30] dark:text-white">
+            سجل المبيعات
+          </h2>
 
-          <p className="text-xl text-[#3F4944]">جميع عمليات البيع المسجلة</p>
+          <p className="text-xl text-[#3F4944] dark:text-[#9DACC2]">
+            جميع عمليات البيع المسجلة
+          </p>
         </div>
 
-        <div className="rounded-lg bg-[#dceaff] p-3 text-[#065F46]">
+        <div className="rounded-lg bg-[#dceaff] p-3 text-[#065F46] dark:bg-[#065f4699] dark:text-[#befaaf]">
           <LuReceipt size={25} />
         </div>
       </div>
@@ -48,10 +52,10 @@ export default function SalesTable() {
         </div>
       ) : (
         /* Table */
-        <div className="overflow-x-auto max-w-400 mx-auto mt-10 border border-gray-200">
-          <table className="w-full text-rights min-w-200 overflow-x-auto">
+        <div className="mx-auto mt-10 max-w-400 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+          <table className="w-full min-w-200 text-right">
             <thead>
-              <tr className="bg-[#f7f9fd] text-[#3F4944]">
+              <tr className="bg-[#f7f9fd] text-[#3F4944] dark:bg-[#111827] dark:text-gray-300">
                 <th className="px-6 py-4 font-semibold">المنتج</th>
 
                 <th className="px-6 py-4 font-semibold">الكمية</th>
@@ -68,34 +72,36 @@ export default function SalesTable() {
               {sales.map((sale) => (
                 <tr
                   key={sale.id}
-                  className="border-t border-gray-100 transition hover:bg-[#f8fbff]"
+                  className="border-t border-gray-100 transition-colors hover:bg-[#f8fbff] dark:border-gray-800 dark:hover:bg-[#172033]"
                 >
                   {/* Product */}
-                  <td className="px-6 py-4">
-                    <span className="font-semibold text-[#0b1c30]">
+                  <td className="px-6 py-6">
+                    <span className="font-semibold text-[#0b1c30] dark:text-white">
                       {sale.productName}
                     </span>
                   </td>
 
                   {/* Quantity */}
-                  <td className="px-6 py-4">
-                    <span className="rounded-md bg-[#EFF4FF] px-3 py-1 font-medium text-[#164e80]">
+                  <td className="px-6 py-6">
+                    <span className="rounded-md bg-[#EFF4FF] px-3 py-1 font-medium text-[#164e80] dark:bg-[#001E2C] dark:text-blue-300">
                       {sale.quantity}
                     </span>
                   </td>
 
                   {/* Unit Price */}
-                  <td className="px-6 py-4 font-medium">{sale.price} جنيه</td>
+                  <td className="px-6 py-6 font-medium text-[#0b1c30] dark:text-gray-200">
+                    {sale.price} جنيه
+                  </td>
 
                   {/* Total */}
-                  <td className="px-6 py-4">
-                    <span className="font-bold text-[#065F46]">
+                  <td className="px-6 py-6">
+                    <span className="font-bold text-[#065F46] dark:text-[#8BD6B7]">
                       {sale.total} جنيه
                     </span>
                   </td>
 
                   {/* Date */}
-                  <td className="px-6 py-4 text-gray-600">
+                  <td className="px-6 py-6 text-gray-600 dark:text-gray-300">
                     {new Intl.DateTimeFormat("ar-EG", {
                       day: "numeric",
                       month: "long",

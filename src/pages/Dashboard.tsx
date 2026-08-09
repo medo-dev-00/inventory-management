@@ -94,12 +94,12 @@ export default function Dashboard({
 
   return (
     <motion.section
-      className="flex-1 pt-10 px-10 relative min-h-[90vh] dark:bg-[#131B2E]"
+      className="pt-10 px-10 relative min-h-[90vh] dark:bg-[#000f16]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 100 }}
     >
       <h1 className="text-7xl mb-10 dark:text-white">لوحة التحكم</h1>
-      <div className="flex gap-4 flex-wrap max-[920px]:ml-20">
+      <div className="flex gap-4 flex-wrap max-[920px]:ml-20 mx-20 ">
         <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card dark:bg-[#131B2E] dark:text-white">
           <div>
             <h2 className="text-xl font-semibold text-gray-500 dark:text-gray-300">
@@ -177,7 +177,7 @@ export default function Dashboard({
         setShowForm={setShowForm}
         shownProducts={products}
       />
-      <div className="absolute bottom-10 flex items-center bg-white shadow-md p-5 rounded-md border border-gray-300 max-md:static max-md:my-5 max-md:w-fit  dark:bg-[#00354A] dark:border-blue-950">
+      <div className="absolute bottom-10 flex items-center bg-white shadow-md p-5 rounded-md border border-gray-300 max-lg:static w-fit my-10 dark:bg-[#00354A] dark:border-blue-950">
         <h3 className="dark:text-white">اجراءات سريعة</h3>
         <div className="w-0.5 py-3 bg-gray-200 mx-2 rounded-2xl"></div>
         <div className="flex gap-4">

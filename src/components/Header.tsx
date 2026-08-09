@@ -7,8 +7,8 @@ export default function Header({
   setShowSettings: Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
-    <header className="relative bg-white flex justify-between py-2 items-center px-24 shadow-xs z-49">
-      <div className="text-2xl font-bold text-[#004532]">
+    <header className="relative bg-white flex justify-between py-2 items-center px-24 shadow-xs z-49 dark:bg-[#001E2C] dark:text-green-100">
+      <div className="text-2xl font-bold text-[#004532] dark:text-green-100">
         نظام الادارة المتكامل
       </div>
 

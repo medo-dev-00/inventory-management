@@ -68,7 +68,10 @@ function App() {
         setTheme={setTheme}
         theme={theme}
       />
-      <main dir="rtl" className="flex min-h-dvh ">
+      <main
+        dir="rtl"
+        className="flex min-h-dvh h-full bg-white dark:bg-[#000f16]"
+      >
         <Sidebar />
 
         <div className="relative w-full flex-1 h-full">

@@ -97,10 +97,10 @@ export default function ProductsTable({
           </button>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-200 max-w-500 text-right mx-auto border border-gray-200 mt-10">
+        <div className="overflow-x-auto scrollbar-thumb-gray-900 scrollbar-">
+          <table className="w-full min-w-200 max-w-500 text-right mx-auto border border-gray-200 mt-10 dark:border-cyan-950  ">
             <thead>
-              <tr className="bg-[#f7f9fd] text-[#3F4944]">
+              <tr className="bg-[#f7f9fd] text-[#3F4944] dark:bg-[#001E2C] dark:text-[#f7f9fd]">
                 <th className="px-6 py-4 font-semibold">المنتج</th>
                 <th className="px-6 py-4 font-semibold">التصنيف</th>
                 <th className="px-6 py-4 font-semibold">السعر</th>
@@ -116,24 +116,24 @@ export default function ProductsTable({
               {shownProducts.map((product) => (
                 <tr
                   key={product.id}
-                  className="border-t border-gray-100 transition dark:text-white"
+                  className="border-t border-gray-100 transition dark:text-white dark:border-gray-800"
                 >
                   {/* Product */}
                   <td className="px-6 py-6">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 ">
                       {product.image ? (
                         <img
                           src={product.image}
                           alt={product.name}
-                          className="h-10 w-10 rounded-lg object-cover"
+                          className="h-10 w-10 rounded-lg object-cover "
                         />
                       ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EFF4FF] text-gray-400">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EFF4FF] text-gray-400 dark:bg-[#001E2C]">
                           <FaRegImage size={18} />
                         </div>
                       )}
 
-                      <span className="font-semibold text-[#0b1c30]">
+                      <span className="font-semibold text-[#0b1c30] dark:text-[#FFFFFF]">
                         {product.name}
                       </span>
                     </div>
@@ -151,7 +151,7 @@ export default function ProductsTable({
 
                   {/* Quantity */}
                   <td className="px-6 pt-8">
-                    <span className="rounded-md bg-[#EFF4FF] px-3 py-1 font-medium text-[#164e80]">
+                    <span className="rounded-md bg-[#EFF4FF] px-3 py-1 font-medium text-[#164e80] dark:bg-[#001E2C] dark:text-blue-300">
                       {product.quantity}
                     </span>
                   </td>
@@ -159,15 +159,15 @@ export default function ProductsTable({
                   {/* Status */}
                   <td className="px-6 pt-8">
                     {Number(product.quantity) <= 0 ? (
-                      <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600">
+                      <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600 dark:bg-red-800 dark:text-red-100">
                         نفذ
                       </span>
                     ) : Number(product.quantity) <= Number(product.minStock) ? (
-                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700">
+                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700 dark:bg-yellow-800 dark:text-yellow-100">
                         قليل
                       </span>
                     ) : (
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700">
+                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700 dark:bg-green-800 dark:text-green-100">
                         متوفر
                       </span>
                     )}
@@ -199,7 +199,7 @@ export default function ProductsTable({
                       </div>
                     </td>
                   ) : (
-                    <td className="px-6 pt-8 text-gray-600">
+                    <td className="px-6 pt-8 text-gray-600 dark:text-gray-200">
                       {product.createdAt
                         ? new Intl.DateTimeFormat("ar-EG", {
                             day: "numeric",

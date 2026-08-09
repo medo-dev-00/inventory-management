@@ -1,71 +1,111 @@
 import { NavLink } from "react-router-dom";
-
-// Icons
 import { MdOutlineDashboard } from "react-icons/md";
 import { FaBars, FaHistory } from "react-icons/fa";
 import { FaBoxArchive, FaX } from "react-icons/fa6";
 import { useState } from "react";
 
 export default function Sidebar() {
-  const [showSideBar, setShowSideBar] = useState<boolean>(false);
+  const [showSideBar, setShowSideBar] = useState(false);
+
+  const closeSidebar = () => {
+    setShowSideBar(false);
+  };
+
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    `group flex h-14 w-full items-center gap-4 overflow-hidden whitespace-nowrap rounded-xl px-3 transition-all duration-300 ${
+      isActive
+        ? "bg-[#065F46] text-[#8BD6B7] shadow-sm"
+        : "text-[#3F4944] hover:bg-[#dce9ff] dark:text-gray-300 dark:hover:bg-[#102530]"
+    }`;
 
   return (
     <>
+      {/* Menu Button */}
       <button
-        className="absolute top-1 right-5 z-50 cursor-pointer transition-all rounded-full w-fit p-2 hidden max-lg:block"
-        onClick={() => setShowSideBar(!showSideBar)}
+        onClick={() => setShowSideBar((prev) => !prev)}
+        className="
+          fixed right-5 top-5 z-60
+          flex h-11 w-11
+          cursor-pointer items-center justify-center
+          rounded-xl
+          bg-white
+          text-[#065F46]
+          shadow-md
+          transition-all duration-200
+          hover:scale-105
+          dark:bg-[#102530]
+          dark:text-[#8BD6B7]
+        "
       >
-        {showSideBar ? <FaX size={30} /> : <FaBars size={30} />}
+        {showSideBar ? <FaX size={18} /> : <FaBars size={20} />}
       </button>
-      <nav
-        className={`pt-16 px-4 text-xl font-semibold bg-[#EFF4FF] lg:w-screen lg:max-w-20 transition-all lg:hover:max-w-57.5 max-lg:absolute  max-lg:z-49 max-lg:h-full max-sm:w-full ${showSideBar ? "right-0" : "max-lg:-right-full"} `}
+
+      {/* Overlay */}
+      <div
+        onClick={closeSidebar}
+        className={`
+          fixed inset-0 z-40
+          bg-black/40
+          transition-all duration-300
+          ${
+            showSideBar
+              ? "visible opacity-100"
+              : "pointer-events-none invisible opacity-0"
+          }
+        `}
+      />
+
+      {/* Sidebar */}
+      <aside
+        className={`
+          fixed right-0 top-0 z-50
+          flex h-screen w-72
+          flex-col
+          bg-[#EFF4FF]
+          p-4
+          shadow-2xl
+          transition-transform duration-300 ease-in-out
+          dark:bg-[#000f16]
+
+          ${showSideBar ? "translate-x-0" : "translate-x-full"}
+        `}
       >
-        <ul className="flex flex-col items-start gap-2">
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              `flex p-2 rounded-2xl gap-2.5 items-center overflow-hidden text-nowrap transition-all duration-300 w-full
-            ${
-              isActive
-                ? "bg-[#065F46] text-[#8BD6B7]"
-                : "text-[#3F4944] hover:bg-[#dce9ff]"
-            }`
-            }
-          >
-            <MdOutlineDashboard size={30} className="min-w-8" />
-            لوحة التحكم
+        {/* Logo / Header */}
+        <div className="mb-8 flex h-14 items-center gap-4 rounded-xl px-3">
+          <span className="text-2xl font-bold text-[#065F46] dark:text-[#8BD6B7] mr-auto">
+            Inventro
+          </span>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex flex-col gap-2">
+          <NavLink to="/dashboard" onClick={closeSidebar} className={linkClass}>
+            <MdOutlineDashboard size={25} className="min-w-6.25" />
+            <span className="text-xl font-semibold">لوحة التحكم</span>
           </NavLink>
 
-          <NavLink
-            to="/products"
-            className={({ isActive }) =>
-              `flex p-3 rounded-2xl gap-2.5 items-center overflow-hidden text-nowrap transition-all duration-300 w-full
-            ${
-              isActive
-                ? "bg-[#065F46] text-[#8BD6B7]"
-                : "text-[#3F4944] hover:bg-[#dce9ff]"
-            }`
-            }
-          >
-            <FaBoxArchive size={30} className="min-w-8" />
-            المنتجات
+          <NavLink to="/products" onClick={closeSidebar} className={linkClass}>
+            <FaBoxArchive size={23} className="min-w-6.25" />
+            <span className="text-xl font-semibold">المنتجات</span>
           </NavLink>
-          <NavLink
-            to="/history"
-            className={({ isActive }) =>
-              `flex p-3 rounded-2xl gap-2.5 items-center overflow-hidden text-nowrap transition-all duration-300 w-full
-            ${
-              isActive
-                ? "bg-[#065F46] text-[#8BD6B7]"
-                : "text-[#3F4944] hover:bg-[#dce9ff]"
-            }`
-            }
-          >
-            <FaHistory size={30} className="min-w-8" />
-            السجل
+
+          <NavLink to="/history" onClick={closeSidebar} className={linkClass}>
+            <FaHistory size={23} className="min-w-6.25" />
+            <span className="text-xl font-semibold">السجل</span>
           </NavLink>
-        </ul>
-      </nav>
+        </nav>
+
+        {/* Bottom */}
+        <div className="mt-auto">
+          <div className="h-px w-full bg-gray-200 dark:bg-gray-800" />
+
+          <div className="mt-4 flex h-12 items-center gap-3 rounded-xl px-3 text-sm text-gray-500 dark:text-gray-400">
+            <div className="h-8 w-8 min-w-8 rounded-full bg-[#065F46]" />
+
+            <span>حساب المستخدم</span>
+          </div>
+        </div>
+      </aside>
     </>
   );
 }

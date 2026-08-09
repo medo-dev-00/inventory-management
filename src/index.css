@@ -17,6 +17,9 @@
   font-weight: 600;
 }
 
+* {
+  transition: 0.3s ease;
+}
 body {
   font-family: IBM, sans-serif;
   overflow-x: hidden;
