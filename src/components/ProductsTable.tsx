@@ -17,6 +17,7 @@ interface Props {
   setProductInfo: Dispatch<React.SetStateAction<Product>>;
   id: string | undefined;
   setId: Dispatch<React.SetStateAction<string | undefined>>;
+  shownProducts: Product[];
 }
 export default function ProductsTable({
   setShowForm,
@@ -24,10 +25,10 @@ export default function ProductsTable({
   setProductInfo,
   id,
   setId,
+  shownProducts,
 }: Props) {
   // Products Context
   const { products, setProducts } = useProducts();
-
   // Show And Hide Delete Product Dialog | Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -112,13 +113,13 @@ export default function ProductsTable({
             </thead>
 
             <tbody>
-              {products.map((product) => (
+              {shownProducts.map((product) => (
                 <tr
                   key={product.id}
                   className="border-t border-gray-100 transition hover:bg-[#f8fbff]"
                 >
                   {/* Product */}
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-6">
                     <div className="flex items-center gap-3">
                       {product.image ? (
                         <img
@@ -139,24 +140,24 @@ export default function ProductsTable({
                   </td>
 
                   {/* Category */}
-                  <td className="px-6 py-4 text-gray-600">
+                  <td className="px-6 pt-8 text-gray-600">
                     {product.category}
                   </td>
 
                   {/* Price */}
-                  <td className="px-6 py-4 font-medium">
+                  <td className="px-6 pt-8 font-medium">
                     {product.sellPrice} جنيه
                   </td>
 
                   {/* Quantity */}
-                  <td className="px-6 py-4">
+                  <td className="px-6 pt-8">
                     <span className="rounded-md bg-[#EFF4FF] px-3 py-1 font-medium text-[#164e80]">
                       {product.quantity}
                     </span>
                   </td>
 
                   {/* Status */}
-                  <td className="px-6 py-4">
+                  <td className="px-6 pt-8">
                     {product.quantity <= 0 ? (
                       <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600">
                         نفذ
@@ -174,7 +175,7 @@ export default function ProductsTable({
 
                   {/* Actions / Date */}
                   {position === "products" ? (
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-6">
                       <div className="flex items-center gap-2">
                         <button
                           className="rounded-md bg-[#078a65] px-3 py-1.5 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#067957]"
@@ -198,7 +199,7 @@ export default function ProductsTable({
                       </div>
                     </td>
                   ) : (
-                    <td className="px-6 py-4 text-gray-600">
+                    <td className="px-6 pt-8 text-gray-600">
                       {product.createdAt
                         ? new Intl.DateTimeFormat("ar-EG", {
                             day: "numeric",

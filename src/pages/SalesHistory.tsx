@@ -7,7 +7,9 @@ export default function SalesTable() {
   const [sales] = useState<Sale[]>(() => {
     const storageSales = localStorage.getItem("sales");
 
-    return storageSales ? JSON.parse(storageSales) : [];
+    if (storageSales) {
+      return JSON.parse(storageSales);
+    }
   });
 
   return (

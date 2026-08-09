@@ -12,6 +12,7 @@ import { LuCircleDollarSign } from "react-icons/lu";
 import { IoWarningOutline } from "react-icons/io5";
 import { FaBan } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
+import type { Sale } from "../components/SellProduct";
 
 interface Props {
   setShowForm: Dispatch<React.SetStateAction<boolean>>;
@@ -25,20 +26,17 @@ export default function Dashboard({
   setId,
   setProductInfo,
   setShowForm,
-
   setShowSaleForm,
 }: Props) {
-  const { products } = useProducts();
-  const { setProducts } = useProducts();
-  const [totalSales, setTotalSales] = useState<number>(() => {
+  const { products, setProducts } = useProducts();
+  const [sales] = useState<Sale[]>(() => {
     const storageSales = localStorage.getItem("sales");
     if (storageSales) {
-      return JSON.parse(storageSales)
-        .map((s: { total: number }) => s.total)
-        .reduce((a: number, v: number) => a * v);
+      return JSON.parse(storageSales);
     }
   });
- 
+  const [totalMonthSales, setTotalMonthSales] = useState<number>();
+  const [todaySales, setTodaySales] = useState<number>();
   useEffect(() => {
     const storageProducts: string | null = localStorage.getItem("products");
     if (storageProducts) {
@@ -46,6 +44,43 @@ export default function Dashboard({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const now = new Date();
+    // Get Month`s Sales
+    const monthSales = sales
+      .filter((sale) => {
+        const saleDate = new Date(sale.createdAt);
+        if (
+          saleDate.getFullYear() === now.getFullYear() &&
+          saleDate.getMonth() === now.getMonth()
+        ) {
+          return sale;
+        }
+      })
+      .map((sale) => sale.total)
+      .reduce((a, c) => a + c);
+
+    // Get Today`s Sales
+    const todaySales = sales
+      .filter((sale) => {
+        const saleDate = new Date(sale.createdAt);
+        if (
+          saleDate.getFullYear() === now.getFullYear() &&
+          saleDate.getMonth() === now.getMonth() &&
+          saleDate.getDay() === now.getDay()
+        ) {
+          return sale;
+        }
+      })
+      .map((sale) => sale.total)
+      .reduce((a, c) => a + c);
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTotalMonthSales(monthSales);
+    // Set Sales
+    setTodaySales(todaySales);
+  }, [sales]);
   // Categories Count
   const categories = [...new Set(products.map((product) => product.category))];
   // MinStock Categories Count
@@ -91,7 +126,8 @@ export default function Dashboard({
             <h2 className="text-xl font-semibold text-gray-500">
               اجمالي الميعات
             </h2>
-            <h3 className="text-3xl font-bold">{products.length}</h3>
+            <h3 className="text-3xl font-bold">{totalMonthSales} جنيه</h3>
+            <span>هذا الشهر</span>
           </div>
           <div className="p-3 rounded-xl bg-[#E5EEFF] text-[#003980]">
             <TbWallet size={30} />
@@ -102,7 +138,7 @@ export default function Dashboard({
             <h2 className="text-xl font-semibold text-gray-500">
               مبيعات اليوم
             </h2>
-            <h3 className="text-3xl font-bold">{products.length}</h3>
+            <h3 className="text-3xl font-bold">{todaySales} حنيه</h3>
           </div>
           <div className="p-3 rounded-xl bg-[#E5EEFF] text-[#003980]">
             <LuCircleDollarSign size={30} />
@@ -137,6 +173,7 @@ export default function Dashboard({
         setId={setId}
         setProductInfo={setProductInfo}
         setShowForm={setShowForm}
+        shownProducts={products}
       />
       <div className="absolute bottom-10 flex items-center bg-white shadow-md p-5 rounded-md border border-gray-300 max-md:static max-md:my-5 max-md:w-fit">
         <h3>اجراءات سريعة</h3>

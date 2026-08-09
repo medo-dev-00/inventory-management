@@ -1,4 +1,4 @@
-import { useEffect, type Dispatch } from "react";
+import { useEffect, useState, type Dispatch } from "react";
 // Products Type
 
 import { useProducts } from "../hooks/useProducts";
@@ -22,12 +22,19 @@ export default function Products({
   id: string | undefined;
   setId: Dispatch<React.SetStateAction<string | undefined>>;
 }) {
-  const { setProducts } = useProducts();
+  const { products, setProducts } = useProducts();
+  const [shownProducts, setShownProducts] = useState<Product[]>([]);
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const storageProducts: string | null = localStorage.getItem("products");
   useEffect(() => {
-    if (storageProducts) {
-      setProducts(JSON.parse(storageProducts));
-    }
+    if (!storageProducts) return;
+
+    const parsedProducts: Product[] = JSON.parse(storageProducts);
+
+    setProducts(parsedProducts);
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShownProducts(parsedProducts);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,27 +67,48 @@ export default function Products({
           </button>
         </div>
       </div>
-      <div>
-        <div>
+      <div className="flex gap-10 px-20 mt-4">
+        <div className="flex items-center bg-[#EFF4FF] flex-1 px-2 border border-gray-100">
+          <FaSearch />
           <input
             type="search"
             name="search"
-            placeholder="بحث..."
-            className="w-full focus:outline-none flex-1"
+            placeholder=" بحث عن اسم المنتج "
+            className="w-full focus:outline-none flex-1 bg-inherit indent-1 p-2 rounded-sm"
           />
-          <FaSearch />
         </div>
-        <div>
-          <select name="filterByCategory" id="filter-by-category">
-            {storageProducts ? (
-              JSON.parse(storageProducts).map((product: Product) => (
-                <option value={product.category}>{product.category}</option>
-              ))
-            ) : (
-              <></>
-            )}
-          </select>
-        </div>
+
+        <select
+          name="filterByCategory"
+          id="filter-by-category"
+          className="bg-white border border-gray-200 rounded-sm basis-100"
+          value={categoryFilter}
+          onChange={(e) => {
+            const value = e.target.value;
+            setCategoryFilter(value);
+            if (value === "all") {
+              setShownProducts(products);
+              return;
+            }
+            const filteredProducts = products.filter(
+              (product) => product.category === value,
+            );
+            setShownProducts(filteredProducts);
+          }}
+        >
+          <option value="all" key={0}>
+            الكل
+          </option>
+          {products ? (
+            products.map((product: Product, index: number) => (
+              <option value={product.category} key={index}>
+                {product.category}
+              </option>
+            ))
+          ) : (
+            <></>
+          )}
+        </select>
       </div>
       <ProductsTable
         position="products"
@@ -88,6 +116,7 @@ export default function Products({
         setProductInfo={setProductInfo}
         id={id}
         setId={setId}
+        shownProducts={shownProducts}
       />
     </motion.section>
   );

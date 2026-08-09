@@ -21,6 +21,7 @@ import Header from "./components/Header";
 import AddProduct from "./components/AddProduct";
 import AddSale from "./components/SellProduct";
 import SalesHistory from "./pages/SalesHistory";
+import Settings from "./components/Settings";
 
 function App() {
   const location = useLocation();
@@ -45,6 +46,7 @@ function App() {
     createdAt: date,
   });
   const [id, setId] = useState<string | undefined>();
+  const [showSettings, setShowSettings] = useState<boolean>(false);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowForm(false);
@@ -53,11 +55,12 @@ function App() {
   return (
     <ProductProvider>
       <Toaster position="top-center" />
+      <Settings setShowSettings={setShowSettings} showSettings={showSettings} />
       <main dir="rtl" className="flex min-h-dvh ">
         <Sidebar />
 
         <div className="relative w-full flex-1 h-full">
-          <Header />
+          <Header setShowSettings={setShowSettings}/>
           <div className="relative">
             <Routes>
               <Route
