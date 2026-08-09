@@ -1,7 +1,7 @@
 import type { Dispatch } from "react";
 import { useProducts } from "../hooks/useProducts";
 import ProductsTable from "../components/ProductsTable";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { type Product } from "../context/ProductsContext";
 import { motion } from "motion/react";
 // Icons
@@ -30,6 +30,15 @@ export default function Dashboard({
 }: Props) {
   const { products } = useProducts();
   const { setProducts } = useProducts();
+  const [totalSales, setTotalSales] = useState<number>(() => {
+    const storageSales = localStorage.getItem("sales");
+    if (storageSales) {
+      return JSON.parse(storageSales)
+        .map((s: { total: number }) => s.total)
+        .reduce((a: number, v: number) => a * v);
+    }
+  });
+ 
   useEffect(() => {
     const storageProducts: string | null = localStorage.getItem("products");
     if (storageProducts) {
@@ -55,7 +64,7 @@ export default function Dashboard({
       animate={{ opacity: 100 }}
     >
       <h1 className="text-7xl mb-10">لوحة التحكم</h1>
-      <div className="flex gap-4 flex-wrap">
+      <div className="flex gap-4 flex-wrap max-[920px]:ml-20">
         <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card">
           <div>
             <h2 className="text-xl font-semibold text-gray-500">
@@ -129,7 +138,7 @@ export default function Dashboard({
         setProductInfo={setProductInfo}
         setShowForm={setShowForm}
       />
-      <div className="absolute bottom-10 flex items-center bg-white shadow-md p-5 rounded-md border border-gray-300">
+      <div className="absolute bottom-10 flex items-center bg-white shadow-md p-5 rounded-md border border-gray-300 max-md:static max-md:my-5 max-md:w-fit">
         <h3>اجراءات سريعة</h3>
         <div className="w-0.5 py-3 bg-gray-200 mx-2 rounded-2xl"></div>
         <div className="flex gap-4">

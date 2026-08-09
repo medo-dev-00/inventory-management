@@ -1,3 +1,14 @@
+// React Hooks
+import { useState, type Dispatch } from "react";
+// Types
+import { type Product } from "../context/ProductsContext";
+// Custom Hooks
+import { useProducts } from "../hooks/useProducts";
+// Libraries
+import { v4 as uuidv4 } from "uuid";
+import toast from "react-hot-toast";
+
+// Icons
 import {
   FaShoppingCart,
   FaInfoCircle,
@@ -5,46 +16,104 @@ import {
   FaPlus,
   FaMinus,
   FaCheckCircle,
+  FaArrowRight,
 } from "react-icons/fa";
-import { type Product } from "../context/ProductsContext";
-import { useProducts } from "../hooks/useProducts";
-import { useEffect, useState, type Dispatch } from "react";
-
-import toast from "react-hot-toast";
-
+// Props Interface
 interface Props {
   showSaleForm: boolean;
   setShowSaleForm: Dispatch<React.SetStateAction<boolean>>;
 }
+export interface Sale {
+  id: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+  total: number;
+  createdAt: string;
+}
 export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
+  // Selected Product
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
+  // Sold Quantity
   const [saleQuantity, setSaleQuantity] = useState<number>(1);
+  // Products Context
   const { products, setProducts } = useProducts();
+  // Handle Sale
   function handelSale() {
-    setProducts((prev) => ({ ...prev, selectedProduct }));
+    if (!selectedProduct) {
+      toast.error("اختر المنتج أولًا");
+      return;
+    }
+    if (saleQuantity <= 0) {
+      toast.error("أدخل كمية صحيحة");
+      return;
+    }
+    if (saleQuantity > selectedProduct.quantity) {
+      toast.error("الكمية المطلوبة أكبر من المخزون");
+      return;
+    }
+
+    // Change Product Quantity
+    const updatedProducts = products.map((product) => {
+      if (product.id === selectedProduct?.id) {
+        product.quantity -= saleQuantity;
+      }
+      return product;
+    });
+    // Set The New Products
+    setProducts(updatedProducts);
+    // Then Save It Into Local Storage
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+    // Show Toast
     toast.success("تم تسجيل عملية البيع بنجاح");
+    // Save Sales
+    const total = selectedProduct.sellPrice * saleQuantity;
+    const sale: Sale = {
+      id: uuidv4(),
+      productId: selectedProduct.id!,
+      productName: selectedProduct.name,
+      quantity: saleQuantity,
+      price: selectedProduct.sellPrice,
+      total: total,
+      createdAt: new Date().toISOString(),
+    };
+    const storageSales = localStorage.getItem("sales");
+    if (storageSales) {
+      const sales: Sale[] = JSON.parse(storageSales);
+      sales.push(sale);
+      localStorage.setItem("sales", JSON.stringify(sales));
+    } else localStorage.setItem("sales", JSON.stringify([sale]));
+    // Empty The States
+    setSelectedProduct(null);
+    setSaleQuantity(1);
   }
+
   function handelCancel() {
     setShowSaleForm(false);
     setSelectedProduct(null);
   }
-  useEffect(() => {
-    setShowSaleForm(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
- 
+
   return (
     <section
-      className={`w-full h-full bg-[#f7f9fd] absolute left-0  ${showSaleForm ? " top-0 visible" : " top-[-200vh]  invisible"} transition-all`}
+      className={`w-full h-full bg-[#f7f9fd] absolute inset-0  ${showSaleForm ? "opacity-100 visible" : "opacity-0 invisible"} transition-all`}
     >
       {/* Header */}
-      <div className="border-b border-gray-200 bg-[#eff4ff] px-10 py-8 text-right">
-        <h1 className="text-3xl font-bold text-[#0b1c30]">تسجيل عملية بيع</h1>
+      <div className="border-b border-gray-200 bg-[#eff4ff] px-10 py-8 text-right flex items-center gap-8">
+        <button
+          type="button"
+          onClick={() => setShowSaleForm(false)}
+          className="flex cursor-pointer items-center gap-2 transition-all hover:translate-x-1"
+        >
+          <FaArrowRight size={30} />
+        </button>
+        <div>
+          <h1 className="text-3xl font-bold text-[#0b1c30]">تسجيل عملية بيع</h1>
 
-        <p className="mt-3 text-lg text-gray-600">
-          تسجيل عملية بيع جديدة وخصمها من المخزون
-        </p>
+          <p className="mt-3 text-lg text-gray-600">
+            تسجيل عملية بيع جديدة وخصمها من المخزون
+          </p>
+        </div>
       </div>
 
       <div className="px-10 py-10">
@@ -108,7 +177,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
                 <span className="font-bold text-[#0b1c30]">
                   {selectedProduct?.sellPrice
                     ? selectedProduct?.sellPrice
-                    : "0 "}
+                    : " 0 "}
                   جنيه
                 </span>
               </div>
@@ -145,7 +214,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
                   className="flex h-12 w-12 items-center justify-center rounded-md border border-gray-300 bg-white text-xl transition hover:bg-gray-100"
                   onClick={(e) => {
                     e.preventDefault();
-                    if (saleQuantity > 0) {
+                    if (saleQuantity > 1) {
                       setSaleQuantity((p) => p - 1);
                     }
                   }}
@@ -190,7 +259,10 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
         {/* Total */}
         <div className="mt-10 flex items-center justify-between rounded-lg border border-[#8dd5c4] bg-[#dceaff] px-8 py-8">
           <span className="text-4xl font-bold text-[#005b48]">
-            {selectedProduct?.sellPrice ? selectedProduct?.sellPrice : 0} جنيه
+            {selectedProduct?.sellPrice
+              ? selectedProduct?.sellPrice * saleQuantity
+              : 0}
+            جنيه
           </span>
 
           <span className="text-2xl font-semibold text-[#0b1c30]">

@@ -1,4 +1,4 @@
-import { type ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 
 // Icons
 import { MdOutlineInfo } from "react-icons/md";
@@ -7,12 +7,23 @@ import { BiTask } from "react-icons/bi";
 import { IoImageOutline } from "react-icons/io5";
 import { TbCloudUpload } from "react-icons/tb";
 import type { Product } from "../context/ProductsContext";
+import { FaX } from "react-icons/fa6";
 
 interface InfoType {
   productInfo: Product;
   setProductInfo: React.Dispatch<React.SetStateAction<Product>>;
 }
 export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
+  const [showCategoryInput, setShowCategoryInput] = useState<boolean>(false);
+  const [categories, setCategories] = useState<string[]>(() => {
+    const storageCategories = localStorage.getItem("categories");
+
+    if (storageCategories) {
+      return JSON.parse(storageCategories);
+    }
+    return [];
+  });
+  const [category, setCategory] = useState<string>("");
   function handleChanges(e: ChangeEvent<HTMLInputElement, HTMLInputElement>) {
     // Set Product Information
     setProductInfo((prev: Product) => ({
@@ -41,7 +52,9 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
   return (
     <form
       className="flex bg-inherit add-form pt-10 p-5 gap-8 w-full max-lg:flex-col "
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
     >
       <div className="flex-1">
         <div className="bg-white p-4 border border-gray-200 rounded-md">
@@ -85,30 +98,97 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
               <div className="mt-4">
                 <div>
                   <select
-                    name="category"
-                    id="category"
-                    onChange={(e) =>
-                      setProductInfo((prev: Product) => ({
-                        ...prev,
-                        category: e.target.value,
-                      }))
+                    value={
+                      categories.includes(productInfo.category)
+                        ? productInfo.category
+                        : ""
                     }
-                    value={productInfo?.category}
-                    className="w-full focus:outline-none bg-[#f8f9ff] p-2 border-[1.5px] border-[#bec9c264] rounded-sm"
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      if (value === "__new__") {
+                        setShowCategoryInput(true);
+                        return;
+                      }
+
+                      setProductInfo((prev) => ({
+                        ...prev,
+                        category: value,
+                      }));
+                    }}
+                    className="w-full bg-[#f8f9ff] p-2 border-[1.5px] border-[#bec9c264] rounded-sm"
                   >
-                    <option
-                      value="مأكولات"
-                      className="bg-[#f8f9ff] hover:bg-[#f8f9ff]"
-                    >
-                      مأكولات
-                    </option>
-                    <option
-                      value="مشروبات"
-                      className="bg-[#f8f9ff] hover:bg-[#f8f9ff]"
-                    >
-                      مشروبات
-                    </option>
+                    {categories.length === 0 && (
+                      <option value="" disabled>
+                        لا توجد تصنيفات
+                      </option>
+                    )}
+
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+
+                    <option value="__new__">+ إضافة تصنيف جديد</option>
                   </select>
+                  <div
+                    className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-all duration-200 ${
+                      showCategoryInput
+                        ? "opacity-100 visible"
+                        : "opacity-0 invisible"
+                    }`}
+                  >
+                    <div
+                      id="cat"
+                      className={`w-full max-w-md rounded-xl bg-white p-6 shadow-xl transition-all duration-200 z-50${
+                        showCategoryInput
+                          ? "scale-100 translate-y-0"
+                          : "scale-95 translate-y-4"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <label htmlFor="category-input">أكتب اسم التصنيف</label>
+                        <button
+                          className="-mt-8 -ml-3 cursor-pointer hover:scale-105 transition-all"
+                          onClick={() => setShowCategoryInput(false)}
+                        >
+                          <FaX />
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        id="category-input"
+                        name="category-input"
+                        value={category}
+                        onChange={(e) => {
+                          setCategory(e.target.value);
+                        }}
+                      />
+                      <button
+                        className="bg-[#004532] text-white px-2 py-1 rounded-sm mr-auto block mt-2 hover:scale-105 transition-all"
+                        onClick={() => {
+                          const updatedCategories: string[] = [
+                            ...categories,
+                            category,
+                          ];
+                          setCategories(updatedCategories);
+                          setShowCategoryInput(false);
+                          setCategory("");
+                          localStorage.setItem(
+                            "categories",
+                            JSON.stringify(updatedCategories),
+                          );
+                          setProductInfo((prev: Product) => ({
+                            ...prev,
+                            category: category,
+                          }));
+                        }}
+                      >
+                        اضافة التصنيف
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

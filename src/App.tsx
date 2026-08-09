@@ -1,16 +1,26 @@
-import "./App.css";
+// React Hooks
+import { useState, useEffect } from "react";
+// Toast Notification
+import { Toaster } from "react-hot-toast";
+// React Router
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+// Get Unique Id for each Product
 import { v4 as uuidv4 } from "uuid";
+
+// Contexts And Providers
+import ProductProvider from "./context/ProductsProvider";
+
+// Types And Interfaces
+import type { Product } from "./context/ProductsContext";
+
+// Components
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
-import Products from "./pages/Pruducts";
+import Products from "./pages/Products";
 import Header from "./components/Header";
 import AddProduct from "./components/AddProduct";
-import ProductProvider from "./context/ProductsProvider";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Toaster } from "react-hot-toast";
-import type { Product } from "./context/ProductsContext";
 import AddSale from "./components/SellProduct";
+import SalesHistory from "./pages/SalesHistory";
 
 function App() {
   const location = useLocation();
@@ -20,7 +30,6 @@ function App() {
     year: "numeric",
   }).format(new Date());
 
-  console.log(date);
   const [showForm, setShowForm] = useState(false);
   const [showSaleForm, setShowSaleForm] = useState(false);
   const [productInfo, setProductInfo] = useState<Product>({
@@ -39,11 +48,12 @@ function App() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowForm(false);
+    setShowSaleForm(false);
   }, [location.pathname]);
   return (
     <ProductProvider>
       <Toaster position="top-center" />
-      <main dir="rtl" className="flex min-h-dvh overflow-hidden">
+      <main dir="rtl" className="flex min-h-dvh ">
         <Sidebar />
 
         <div className="relative w-full flex-1 h-full">
@@ -74,6 +84,7 @@ function App() {
                   />
                 }
               />
+              <Route path="/history" element={<SalesHistory />} />
               {/* Default Route */}
               <Route path="*" element={<Navigate to={"/dashboard"} />} />
             </Routes>

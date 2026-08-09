@@ -115,9 +115,7 @@ export default function AddProduct({
 
   return (
     <section
-      className={`absolute top-1/2 z-50 h-full w-full -translate-x-1/2 -translate-y-1/2 bg-[#f7f9fd] px-4 py-10 transition-all duration-300 ${
-        showForm ? "left-1/2 opacity-100" : "left-[200vw] opacity-0"
-      }`}
+      className={`w-full h-full bg-[#f7f9fd] absolute inset-0 pt-10  ${showForm ? "opacity-100 visible" : "opacity-0 invisible"} transition-all`}
     >
       {/* Header */}
       <div className="pr-8 flex max-w-7xl items-center gap-4">

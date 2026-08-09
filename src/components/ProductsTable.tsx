@@ -96,81 +96,109 @@ export default function ProductsTable({
           </button>
         </div>
       ) : (
-        <table className=" w-full max-w-500 mx-auto mt-10 min-w-200 overflow-auto">
-          <thead className="p-4">
-            <tr className="bg-[#EFF4FF] p-4 flex justify-between">
-              <th className="basis-36">المنتج</th>
-              <th className="basis-24">التصنيف</th>
-              <th className="basis-24">السعر</th>
-              <th className="basis-24">الكمية</th>
-              <th className="basis-24">الحالة</th>
-              <th className="basis-24">
-                {position === "dashboard" ? "تاريخ الانشاء" : "الاجراءات"}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {products?.map((product, index) => {
-              return (
-                <tr key={index} className="p-4 items-center">
-                  <td className="flex items-center gap-2">
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-20 h-15"
-                      />
-                    ) : (
-                      <FaRegImage className="w-20 h-15 p-2 " />
-                    )}
-                    <p>
-                      <span>{product.name}</span>
-                      <br />
-                      <span className="text-gray-500 text-sm tracking-wide">
-                        {product.description}
-                      </span>
-                    </p>
-                  </td>
-                  <td className="basis-24">{product.category}</td>
-                  <td className="basis-24">{product.sellPrice}</td>
-                  <td className="basis-24">{product.quantity}</td>
-                  {product.quantity === product.minStock ? (
-                    <td className="text-[#af9908] bg-[#f59f0b75] px-4 py-1 rounded-2xl font-semibold">
-                      قليل
-                    </td>
-                  ) : product.quantity <= 0 ? (
-                    <td className="bg-[#ba1a1a55] text-[#93000A] px-4 py-1 rounded-2xl font-semibold">
-                      نفذ
-                    </td>
-                  ) : (
-                    <td className="text-[#004532] bg-[#01996e60] px-4 py-1 rounded-2xl font-semibold">
-                      متوفر
-                    </td>
-                  )}
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-200 max-w-500 text-right mx-auto border border-gray-200 mt-10">
+            <thead>
+              <tr className="bg-[#f7f9fd] text-[#3F4944]">
+                <th className="px-6 py-4 font-semibold">المنتج</th>
+                <th className="px-6 py-4 font-semibold">التصنيف</th>
+                <th className="px-6 py-4 font-semibold">السعر</th>
+                <th className="px-6 py-4 font-semibold">الكمية</th>
+                <th className="px-6 py-4 font-semibold">الحالة</th>
+                <th className="px-6 py-4 font-semibold">
+                  {position === "products" ? "الإجراءات" : "تاريخ الإضافة"}
+                </th>
+              </tr>
+            </thead>
 
+            <tbody>
+              {products.map((product) => (
+                <tr
+                  key={product.id}
+                  className="border-t border-gray-100 transition hover:bg-[#f8fbff]"
+                >
+                  {/* Product */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      {product.image ? (
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="h-10 w-10 rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EFF4FF] text-gray-400">
+                          <FaRegImage size={18} />
+                        </div>
+                      )}
+
+                      <span className="font-semibold text-[#0b1c30]">
+                        {product.name}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Category */}
+                  <td className="px-6 py-4 text-gray-600">
+                    {product.category}
+                  </td>
+
+                  {/* Price */}
+                  <td className="px-6 py-4 font-medium">
+                    {product.sellPrice} جنيه
+                  </td>
+
+                  {/* Quantity */}
+                  <td className="px-6 py-4">
+                    <span className="rounded-md bg-[#EFF4FF] px-3 py-1 font-medium text-[#164e80]">
+                      {product.quantity}
+                    </span>
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-6 py-4">
+                    {product.quantity <= 0 ? (
+                      <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600">
+                        نفذ
+                      </span>
+                    ) : product.quantity <= product.minStock ? (
+                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700">
+                        قليل
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700">
+                        متوفر
+                      </span>
+                    )}
+                  </td>
+
+                  {/* Actions / Date */}
                   {position === "products" ? (
-                    <td className="flex gap-2 ">
-                      <button
-                        className="px-2 py-0.5 rounded-sm bg-[#078a65] text-white font-semibold cursor-pointer hover:-translate-y-0.5 transition-all"
-                        onClick={() => {
-                          setId(product.id);
-                          handleEdit(product.id);
-                        }}
-                      >
-                        تعديل
-                      </button>
-                      <button
-                        className="px-2 py-0.5 rounded-sm bg-[#880b0bf4] text-white cursor-pointer hover:-translate-y-0.5 transition-all"
-                        onClick={() => {
-                          setId(product.id);
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        حذف
-                      </button>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="rounded-md bg-[#078a65] px-3 py-1.5 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#067957]"
+                          onClick={() => {
+                            setId(product.id);
+                            handleEdit(product.id);
+                          }}
+                        >
+                          تعديل
+                        </button>
+
+                        <button
+                          className="rounded-md bg-[#880b0b] px-3 py-1.5 text-white transition-all hover:-translate-y-0.5 hover:bg-[#6f0808]"
+                          onClick={() => {
+                            setId(product.id);
+                            setIsModalOpen(true);
+                          }}
+                        >
+                          حذف
+                        </button>
+                      </div>
                     </td>
                   ) : (
-                    <td>
+                    <td className="px-6 py-4 text-gray-600">
                       {product.createdAt
                         ? new Intl.DateTimeFormat("ar-EG", {
                             day: "numeric",
@@ -181,10 +209,10 @@ export default function ProductsTable({
                     </td>
                   )}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </>
   );
