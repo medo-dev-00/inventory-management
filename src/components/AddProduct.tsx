@@ -121,7 +121,10 @@ export default function AddProduct({
       <div className="pr-8 flex max-w-7xl items-center gap-4">
         <button
           type="button"
-          onClick={() => setShowForm(false)}
+          onClick={() => {
+            resetForm();
+            setShowForm(false);
+          }}
           className="flex cursor-pointer items-center gap-2 transition-all hover:translate-x-1"
         >
           <FaArrowRight size={30} />

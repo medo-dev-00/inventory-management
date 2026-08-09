@@ -149,7 +149,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
         </div>
 
         {/* Product Details + Sale Details */}
-        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-8 xl:grid-cols-2">
           {/* Product Information */}
           <div className="rounded-lg bg-[#dfeaff] p-8">
             <div className="mb-6 flex items-center justify-end gap-3">
@@ -176,7 +176,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
 
                 <span className="font-bold text-[#0b1c30]">
                   {selectedProduct?.sellPrice
-                    ? selectedProduct?.sellPrice
+                    ? selectedProduct?.sellPrice + " "
                     : " 0 "}
                   جنيه
                 </span>
@@ -186,7 +186,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
                 <span className="text-gray-600">المخزون الحالي:</span>
 
                 <span className="rounded-full bg-[#cfe0fa] px-4 py-1 font-semibold text-[#164e80]">
-                  {selectedProduct?.quantity}
+                  {selectedProduct?.quantity + " "}
                   قطعة
                 </span>
               </div>
@@ -194,63 +194,86 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
           </div>
 
           {/* Sale Details */}
-          <div className="rounded-lg bg-[#dfeaff] p-8">
-            <div className="mb-6 flex items-center justify-end gap-3">
-              <h2 className="text-2xl font-bold text-[#0b1c30]">
-                تفاصيل البيع
-              </h2>
-
-              <FaShoppingCart size={25} className="text-[#004532]" />
-            </div>
-
+          <div className="rounded-lg bg-[#dfeaff] p-8 ">
             <div>
-              <label className="mb-3 block text-lg font-semibold text-[#26332f]">
-                الكمية المباعة
-              </label>
+              <div className="mb-6 flex items-center justify-end gap-3">
+                <h2 className="text-2xl font-bold text-[#0b1c30]">
+                  تفاصيل البيع
+                </h2>
 
-              <div className="flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  className="flex h-12 w-12 items-center justify-center rounded-md border border-gray-300 bg-white text-xl transition hover:bg-gray-100"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (saleQuantity > 1) {
-                      setSaleQuantity((p) => p - 1);
-                    }
-                  }}
-                >
-                  <FaMinus />
-                </button>
-
-                <input
-                  type="number"
-                  // max={}
-                  value={saleQuantity}
-                  readOnly
-                  className="h-14 w-32 rounded-md border border-gray-300 bg-white text-center text-xl outline-none"
-                />
-
-                <button
-                  type="button"
-                  className="flex h-12 w-12 items-center justify-center rounded-md border border-gray-300 bg-white text-xl transition hover:bg-gray-100"
-                  onClick={() => {
-                    if (saleQuantity < Number(selectedProduct?.quantity)) {
-                      setSaleQuantity((p) => p + 1);
-                    }
-                  }}
-                >
-                  <FaPlus />
-                </button>
+                <FaShoppingCart size={25} className="text-[#004532]" />
               </div>
 
-              <div className="mt-8 flex items-center justify-end gap-3 text-lg">
-                <span className="text-gray-600">المتاح في المخزون:</span>
+              <div>
+                <div className="flex justify-between w-full">
+                  <label className="mb-3 block text-xl font-semibold text-[#26332f]">
+                    الكمية المباعة
+                  </label>
+                  <div className="flex items-center justify-end gap-3">
+                    <button
+                      type="button"
+                      className="flex h-8 w-8 items-center justify-center rounded-md text-lg transition hover:bg-gray-100"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (saleQuantity > 1) {
+                          setSaleQuantity((p) => p - 1);
+                        }
+                      }}
+                    >
+                      <FaMinus />
+                    </button>
 
-                <span className="font-bold text-[#0b1c30]">
-                  {selectedProduct?.quantity} قطعة
-                </span>
+                    <input
+                      type="text"
+                      // max={}
+                      value={saleQuantity}
+                      className="h-8 w-12 rounded-md text-center text-2xl outline-none"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          // eslint-disable-next-line no-constant-binary-expression
+                          typeof value &&
+                          Number(value) <= Number(selectedProduct?.quantity)
+                        ) {
+                          setSaleQuantity(Number(value));
+                        }
+                      }}
+                    />
 
-                <FaBoxOpen size={24} className="text-[#00624b]" />
+                    <button
+                      type="button"
+                      className="flex h-8 w-8 items-center justify-center rounded-md text-lg transition hover:bg-gray-100"
+                      onClick={() => {
+                        if (saleQuantity < Number(selectedProduct?.quantity)) {
+                          setSaleQuantity((p) => p + 1);
+                        }
+                      }}
+                    >
+                      <FaPlus />
+                    </button>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center mt-8">
+                  <button
+                    className="text-white bg-[#004f3b] px-4 py-2 rounded-md font-semibold hover:-translate-y-0.5 transition-all"
+                    onClick={() => {
+                      if (selectedProduct)
+                        setSaleQuantity(selectedProduct?.quantity);
+                    }}
+                  >
+                    تحديد جميع الكمية
+                  </button>
+
+                  <div className="flex items-center justify-center gap-3 text-lg">
+                    <span className="text-gray-600">المتاح في المخزون:</span>
+
+                    <span className="font-bold text-[#0b1c30]">
+                      {selectedProduct?.quantity} قطعة
+                    </span>
+
+                    <FaBoxOpen size={24} className="text-[#00624b]" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -258,15 +281,14 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
 
         {/* Total */}
         <div className="mt-10 flex items-center justify-between rounded-lg border border-[#8dd5c4] bg-[#dceaff] px-8 py-8">
+          <span className="text-3xl font-semibold text-[#0b1c30]">
+            إجمالي العملية
+          </span>{" "}
           <span className="text-4xl font-bold text-[#005b48]">
             {selectedProduct?.sellPrice
               ? selectedProduct?.sellPrice * saleQuantity
-              : 0}
+              : "0 "}
             جنيه
-          </span>
-
-          <span className="text-2xl font-semibold text-[#0b1c30]">
-            إجمالي العملية
           </span>
         </div>
 

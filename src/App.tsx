@@ -31,7 +31,9 @@ function App() {
     year: "numeric",
   }).format(new Date());
 
+  // Show Add Product Form
   const [showForm, setShowForm] = useState(false);
+  // Show Sale Form
   const [showSaleForm, setShowSaleForm] = useState(false);
   const [productInfo, setProductInfo] = useState<Product>({
     id: uuidv4(),
@@ -45,8 +47,13 @@ function App() {
     image: null,
     createdAt: date,
   });
+  // Set Product Id
   const [id, setId] = useState<string | undefined>();
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowForm(false);
@@ -55,12 +62,17 @@ function App() {
   return (
     <ProductProvider>
       <Toaster position="top-center" />
-      <Settings setShowSettings={setShowSettings} showSettings={showSettings} />
+      <Settings
+        setShowSettings={setShowSettings}
+        showSettings={showSettings}
+        setTheme={setTheme}
+        theme={theme}
+      />
       <main dir="rtl" className="flex min-h-dvh ">
         <Sidebar />
 
         <div className="relative w-full flex-1 h-full">
-          <Header setShowSettings={setShowSettings}/>
+          <Header setShowSettings={setShowSettings} />
           <div className="relative">
             <Routes>
               <Route

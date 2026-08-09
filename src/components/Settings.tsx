@@ -1,17 +1,26 @@
-import type { Dispatch } from "react";
+import { type Dispatch } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 
 interface Props {
   showSettings: boolean;
   setShowSettings: Dispatch<React.SetStateAction<boolean>>;
+  setTheme: Dispatch<React.SetStateAction<"dark" | "light">>;
+  theme: "dark" | "light";
 }
-export default function Settings({ showSettings, setShowSettings }: Props) {
+
+export default function Settings({
+  showSettings,
+  setShowSettings,
+  setTheme,
+  theme,
+}: Props) {
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-all duration-300 ${
         showSettings ? "visible opacity-100" : "invisible opacity-0"
       }`}
+      onClick={() => setShowSettings(false)}
     >
       <div
         className={`w-full max-w-md rounded-2xl bg-white p-6 shadow-xl transition-all duration-300 ${
@@ -21,8 +30,7 @@ export default function Settings({ showSettings, setShowSettings }: Props) {
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* محتوى الـ Settings */}
-
+        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">الإعدادات</h2>
@@ -60,12 +68,36 @@ export default function Settings({ showSettings, setShowSettings }: Props) {
           <h3 className="font-semibold">المظهر</h3>
 
           <div className="mt-3 grid grid-cols-2 gap-3">
-            <button className="flex items-center justify-center gap-4 rounded-xl border p-4 transition hover:-translate-y-0.5">
-              <FaSun className="text-yellow-500" /> فاتح
+            {/* Light */}
+            <button
+              onClick={() => setTheme("light")}
+              className={`flex cursor-pointer items-center justify-center gap-4 rounded-xl border p-4 font-semibold transition hover:-translate-y-0.5 ${
+                theme === "light"
+                  ? "border-[#065F46] bg-[#065F46] text-white"
+                  : "border-gray-200 bg-white text-gray-800"
+              }`}
+            >
+              <FaSun
+                size={25}
+                className={theme === "light" ? "text-white" : "text-black"}
+              />
+              فاتح
             </button>
 
-            <button className="flex items-center justify-center gap-4 rounded-xl border p-4 transition hover:-translate-y-0.5">
-              <FaMoon /> داكن
+            {/* Dark */}
+            <button
+              onClick={() => setTheme("dark")}
+              className={`flex cursor-pointer items-center justify-center gap-4 rounded-xl border p-4 font-semibold transition hover:-translate-y-0.5 ${
+                theme === "dark"
+                  ? "border-[#065F46] bg-[#065F46] text-white"
+                  : "border-gray-200 bg-white text-gray-800"
+              }`}
+            >
+              <FaMoon
+                size={25}
+                className={theme === "dark" ? "text-white" : "text-black"}
+              />
+              داكن
             </button>
           </div>
         </div>

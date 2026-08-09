@@ -116,7 +116,7 @@ export default function ProductsTable({
               {shownProducts.map((product) => (
                 <tr
                   key={product.id}
-                  className="border-t border-gray-100 transition hover:bg-[#f8fbff]"
+                  className="border-t border-gray-100 transition dark:text-white"
                 >
                   {/* Product */}
                   <td className="px-6 py-6">
@@ -140,7 +140,7 @@ export default function ProductsTable({
                   </td>
 
                   {/* Category */}
-                  <td className="px-6 pt-8 text-gray-600">
+                  <td className="px-6 pt-8 text-gray-600 dark:text-gray-400">
                     {product.category}
                   </td>
 
@@ -158,11 +158,11 @@ export default function ProductsTable({
 
                   {/* Status */}
                   <td className="px-6 pt-8">
-                    {product.quantity <= 0 ? (
+                    {Number(product.quantity) <= 0 ? (
                       <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600">
                         نفذ
                       </span>
-                    ) : product.quantity <= product.minStock ? (
+                    ) : Number(product.quantity) <= Number(product.minStock) ? (
                       <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700">
                         قليل
                       </span>
