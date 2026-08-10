@@ -10,6 +10,7 @@ export default function SalesTable() {
     if (storageSales) {
       return JSON.parse(storageSales);
     }
+    return [];
   });
 
   return (
