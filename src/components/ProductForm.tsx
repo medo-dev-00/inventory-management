@@ -27,13 +27,13 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
   function handleChanges(e: ChangeEvent<HTMLInputElement, HTMLInputElement>) {
     // Set Product Information
     const target = e.target;
-    if (/^\d*\.?\d*$/.test(target.value)) {
-      setProductInfo((prev: Product) => ({
-        ...prev,
-        [target.name]: target.value,
-      }));
-    }
+
+    setProductInfo((prev: Product) => ({
+      ...prev,
+      [target.name]: target.value,
+    }));
   }
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -52,6 +52,43 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
 
     reader.readAsDataURL(file);
   };
+  function handelNumbers(e: ChangeEvent<HTMLInputElement, HTMLInputElement>) {
+    // Set Product Information
+    const target = e.target;
+    // To Check if the value is number
+    if (/^\d*\.?\d*$/.test(target.value)) {
+      setProductInfo((prev: Product) => ({
+        ...prev,
+        [target.name]: target.value,
+      }));
+    }
+  }
+  function handleCategory(
+    e: ChangeEvent<HTMLSelectElement, HTMLSelectElement>,
+  ) {
+    const value = e.target.value;
+
+    if (value === "__new__") {
+      setShowCategoryInput(true);
+      return;
+    }
+
+    setProductInfo((prev) => ({
+      ...prev,
+      category: value,
+    }));
+  }
+  function handleCreate() {
+    const updatedCategories: string[] = [...categories, category];
+    setCategories(updatedCategories);
+    setShowCategoryInput(false);
+    setCategory("");
+    localStorage.setItem("categories", JSON.stringify(updatedCategories));
+    setProductInfo((prev: Product) => ({
+      ...prev,
+      category: category,
+    }));
+  }
   return (
     <form
       className="flex bg-inherit add-form pt-10 px-10 gap-8 w-full max-lg:flex-col "
@@ -106,19 +143,7 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
                         ? productInfo.category
                         : ""
                     }
-                    onChange={(e) => {
-                      const value = e.target.value;
-
-                      if (value === "__new__") {
-                        setShowCategoryInput(true);
-                        return;
-                      }
-
-                      setProductInfo((prev) => ({
-                        ...prev,
-                        category: value,
-                      }));
-                    }}
+                    onChange={handleCategory}
                     className="w-full bg-[#f8f9ff] p-2 border-[1.5px] border-[#bec9c264] rounded-sm dark:bg-[#001E2C] dark:border-gray-800 dark:text-white"
                   >
                     {categories.length === 0 && (
@@ -170,23 +195,7 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
                       />
                       <button
                         className="bg-[#004532] text-white px-2 py-1 rounded-sm mr-auto block mt-2 hover:scale-105 transition-all"
-                        onClick={() => {
-                          const updatedCategories: string[] = [
-                            ...categories,
-                            category,
-                          ];
-                          setCategories(updatedCategories);
-                          setShowCategoryInput(false);
-                          setCategory("");
-                          localStorage.setItem(
-                            "categories",
-                            JSON.stringify(updatedCategories),
-                          );
-                          setProductInfo((prev: Product) => ({
-                            ...prev,
-                            category: category,
-                          }));
-                        }}
+                        onClick={handleCreate}
                       >
                         اضافة التصنيف
                       </button>
@@ -206,31 +215,27 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
             <div className="w-full h-0.5 bg-[#f4f2f254] rounded-2xl px-4 my-4 "></div>
             <div>
               <div>
-                <label htmlFor="buyPrice" className="text-[#3F4944]">
+                <label htmlFor="buy_price" className="text-[#3F4944]">
                   سعر الشراء
                 </label>
                 <input
                   type="text"
-                  name="buyPrice"
-                  id="buyPrice"
+                  name="buy_price"
+                  id="buy_price"
                   placeholder="0.00"
                   value={productInfo?.buy_price}
-                  onChange={(e) => {
-                    handleChanges(e);
-                  }}
+                  onChange={handelNumbers}
                 />
               </div>
               <div className="mt-5">
-                <label htmlFor="sellPrice">سعر البيع *</label>
+                <label htmlFor="sell_price">سعر البيع *</label>
                 <input
                   type="text"
-                  name="sellPrice"
-                  id="sellPrice"
+                  name="sell_price"
+                  id="sell_price"
                   placeholder="0.00"
                   value={productInfo?.sell_price}
-                  onChange={(e) => {
-                    handleChanges(e);
-                  }}
+                  onChange={handelNumbers}
                 />
               </div>
             </div>
@@ -254,20 +259,18 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
                   id="quantity"
                   placeholder="0"
                   value={productInfo?.quantity}
-                  onChange={(e) => {
-                    handleChanges(e);
-                  }}
+                  onChange={handelNumbers}
                 />
               </div>
               <div className="mt-5">
-                <label htmlFor="minStock">الحد الادنى للمخزون</label>
+                <label htmlFor="min_stock">الحد الادنى للمخزون</label>
                 <input
                   type="text"
-                  name="minStock"
-                  id="minStock"
+                  name="min_stock"
+                  id="min_stock"
                   placeholder="0"
                   value={productInfo?.min_stock}
-                  onChange={(e) => handleChanges(e)}
+                  onChange={handelNumbers}
                 />
               </div>
             </div>
