@@ -23,6 +23,7 @@ import AddSale from "./components/SellProduct";
 import SalesHistory from "./pages/SalesHistory";
 import Settings from "./components/Settings";
 import { useTranslation } from "react-i18next";
+import { SalesProvider } from "./context/SalesProvider";
 
 function App() {
   const { i18n } = useTranslation();
@@ -58,14 +59,17 @@ function App() {
   });
   // Set Product Id
   const [id, setId] = useState<string | undefined>();
+
+  // Show Settings Window
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  // Color Theme
   const [theme, setTheme] = useState<"dark" | "light">(() => {
+    // Get Saved Theme From Locale Storage
     const savedTheme = localStorage.getItem("theme");
     // If The Saved Theme in locale storage is dark or light return it
     if (savedTheme === "dark" || savedTheme === "light") {
       return savedTheme;
     }
-
     return "light";
   });
   useEffect(() => {
@@ -76,7 +80,7 @@ function App() {
     setShowForm(false);
     setShowSaleForm(false);
   }, [location.pathname]);
-  useEffect(() => {}, []);
+
   return (
     <ProductProvider>
       <Toaster position="top-center" />
@@ -87,60 +91,59 @@ function App() {
         setTheme={setTheme}
         theme={theme}
       />
-      <main
-        className="flex min-h-dvh h-full bg-white dark:bg-[#000f16] pb-50"
-        dir="rtl"
-      >
-        <Sidebar />
+      <SalesProvider>
+        <main
+          className="flex min-h-dvh h-full bg-white dark:bg-[#000f16] pb-50"
+          dir="rtl"
+        >
+          <Sidebar />
 
-        <div className="relative w-full flex-1 h-full">
-          <Header setShowSettings={setShowSettings} />
-          <div className="relative">
-            <Routes>
-              <Route
-                path="/dashboard"
-                element={
-                  <Dashboard
-                    setShowForm={setShowForm}
-                    id={id}
-                    setId={setId}
-                    setProductInfo={setProductInfo}
-                    setShowSaleForm={setShowSaleForm}
-                  />
-                }
+          <div className="relative w-full flex-1 h-full ">
+            <Header setShowSettings={setShowSettings} />
+            <div className="relative max-w-500 mx-auto">
+              <Routes>
+                <Route
+                  path="/dashboard"
+                  element={
+                    <Dashboard
+                      setShowForm={setShowForm}
+                      setShowSaleForm={setShowSaleForm}
+                    />
+                  }
+                />
+                <Route
+                  path="/products"
+                  element={
+                    <Products
+                      setShowForm={setShowForm}
+                      setProductInfo={setProductInfo}
+                      id={id}
+                      setId={setId}
+                      setShowSaleForm={setShowSaleForm}
+                    />
+                  }
+                />
+                <Route path="/history" element={<SalesHistory />} />
+                <Route path="*" element={<Navigate to={"/dashboard"} />} />
+                {/* Default Route */}
+              </Routes>
+              <AddProduct
+                showForm={showForm}
+                setShowForm={setShowForm}
+                productInfo={productInfo}
+                setProductInfo={setProductInfo}
+                id={id}
+                setId={setId}
+                date={date}
               />
-              <Route
-                path="/products"
-                element={
-                  <Products
-                    setShowForm={setShowForm}
-                    setProductInfo={setProductInfo}
-                    id={id}
-                    setId={setId}
-                    setShowSaleForm={setShowSaleForm}
-                  />
-                }
+              <AddSale
+                showSaleForm={showSaleForm}
+                setShowSaleForm={setShowSaleForm}
               />
-              <Route path="/history" element={<SalesHistory />} />
-              <Route path="*" element={<Navigate to={"/dashboard"} />} />
-              {/* Default Route */}
-            </Routes>
-            <AddProduct
-              showForm={showForm}
-              setShowForm={setShowForm}
-              productInfo={productInfo}
-              setProductInfo={setProductInfo}
-              id={id}
-              setId={setId}
-              date={date}
-            />
-            <AddSale
-              showSaleForm={showSaleForm}
-              setShowSaleForm={setShowSaleForm}
-            />
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </SalesProvider>
     </ProductProvider>
   );
 }

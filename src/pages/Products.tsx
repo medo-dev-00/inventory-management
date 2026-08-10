@@ -16,37 +16,21 @@ export default function Products({
   setShowSaleForm,
 }: {
   setShowForm: Dispatch<React.SetStateAction<boolean>>;
-
   setProductInfo: Dispatch<React.SetStateAction<Product>>;
   setShowSaleForm: Dispatch<React.SetStateAction<boolean>>;
   id: string | undefined;
   setId: Dispatch<React.SetStateAction<string | undefined>>;
 }) {
-  const { products, setProducts } = useProducts();
+  const { products } = useProducts();
   const [shownProducts, setShownProducts] = useState<Product[]>([]);
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [search, setSearch] = useState<string>("");
-  const storageProducts: string | null = localStorage.getItem("products");
-  useEffect(() => {
-    if (!storageProducts) return;
 
-    const parsedProducts: Product[] = JSON.parse(storageProducts);
-
-    setProducts(parsedProducts);
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setShownProducts(parsedProducts);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    if (storageProducts)
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setShownProducts(JSON.parse(storageProducts));
-  }, [storageProducts]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
     handleFiltration();
-  }, [search, categoryFilter, products]);
+  }, [search, categoryFilter, products, typeFilter]);
   function handleFiltration() {
     const filteredProducts = products.filter((product) => {
       setCategoryFilter((p) => p);
@@ -60,8 +44,29 @@ export default function Products({
 
       return matchesCategory && matchesSearch;
     });
-
-    setShownProducts(filteredProducts);
+    switch (typeFilter) {
+      case "name": {
+        setShownProducts(
+          filteredProducts.sort((a, b) => (b.name < a.name ? 1 : -1)),
+        );
+        break;
+      }
+      case "category": {
+        setShownProducts(
+          filteredProducts.sort((a, b) => (b.category < a.category ? 1 : -1)),
+        );
+        break;
+      }
+      case "quantity": {
+        setShownProducts(
+          filteredProducts.sort((a, b) => b.quantity - a.quantity),
+        );
+        break;
+      }
+      default: {
+        setShownProducts(filteredProducts);
+      }
+    }
   }
   return (
     <motion.section
@@ -69,6 +74,7 @@ export default function Products({
       initial={{ opacity: 0 }}
       animate={{ opacity: 100 }}
     >
+     
       <div className="flex justify-between items-center border-b-gray-200 dark:border-b-cyan-950 border-b pb-4 max-lg:justify-start max-lg:gap-10 max-md:flex-col">
         <div>
           <h2 className="text-4xl font-bold text-black dark:text-white">
@@ -97,7 +103,7 @@ export default function Products({
           </button>
         </div>
       </div>
-      <div className="flex gap-10 px-20 mt-4">
+      <div className="flex gap-10 px-20 mt-4 max-lg:flex-col">
         <div className="flex flex-1 items-center bg-[#EFF4FF] px-2 border border-gray-100 dark:bg-[#001E2C] dark:text-white dark:border-[#011b27] rounded-sm">
           <FaSearch />
           <input
@@ -113,29 +119,64 @@ export default function Products({
           />
         </div>
 
-        <select
-          name="filterByCategory"
-          id="filter-by-category"
-          className="bg-white border border-gray-200 rounded-sm max-w-60 px-2 flex-1 dark:bg-[#001E2C] dark:text-white dark:border-[#011b27]"
-          value={categoryFilter}
-          onChange={(e) => {
-            const value = e.target.value;
-            setCategoryFilter(value);
-          }}
-        >
-          <option value="all" key={0}>
-            الكل
-          </option>
-          {products ? (
-            products.map((product: Product, index: number) => (
-              <option value={product.category} key={index}>
-                {product.category}
+        <div className="flex flex-1 ">
+          <div className="max-w-60 px-2 flex-1 relative  max-lg:h-12 max-lg:max-w-full">
+            <label
+              htmlFor="filter-by-category"
+              className="absolute top-1/2 -translate-y-1/2 right-8"
+            >
+              الترتيب:
+            </label>
+            <select
+              name="filterByCategory"
+              id="filter-by-category"
+              className="bg-white border border-gray-200 rounded-sm w-full h-full dark:bg-[#001E2C] dark:text-white dark:border-[#011b27] pr-17"
+              value={typeFilter}
+              onChange={(e) => {
+                const value = e.target.value;
+                setTypeFilter(value);
+              }}
+            >
+              <option value="all" key={0}>
+                ( الكل )
               </option>
-            ))
-          ) : (
-            <></>
-          )}
-        </select>
+              <option value="name">حسب الاسم</option>
+              <option value="category">حسب التصنيف</option>
+              <option value="quantity">حسب الكمية</option>
+            </select>
+          </div>
+          <div className="max-w-60 px-2 flex-1 relative max-lg:h-12 max-lg:max-w-full">
+            <label
+              htmlFor="filter-by-category"
+              className="absolute top-1/2 -translate-y-1/2 right-8"
+            >
+              الفئة:
+            </label>
+            <select
+              name="filterByCategory"
+              id="filter-by-category"
+              className="bg-white border border-gray-200 rounded-sm w-full h-full dark:bg-[#001E2C] dark:text-white dark:border-[#011b27] pr-15 "
+              value={categoryFilter}
+              onChange={(e) => {
+                const value = e.target.value;
+                setCategoryFilter(value);
+              }}
+            >
+              <option value="all" key={0}>
+                ( الكل )
+              </option>
+              {products ? (
+                products.map((product: Product, index: number) => (
+                  <option value={product.category} key={index}>
+                    ({product.category})
+                  </option>
+                ))
+              ) : (
+                <></>
+              )}
+            </select>
+          </div>
+        </div>
       </div>
       <ProductsTable
         position="products"

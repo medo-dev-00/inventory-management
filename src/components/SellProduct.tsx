@@ -2,8 +2,10 @@
 import { useState, type Dispatch } from "react";
 // Types
 import { type Product } from "../context/ProductsContext";
+import { type Sale } from "../context/SalesContext";
 // Custom Hooks
 import { useProducts } from "../hooks/useProducts";
+
 // Libraries
 import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
@@ -18,20 +20,13 @@ import {
   FaCheckCircle,
   FaArrowRight,
 } from "react-icons/fa";
+import { useSales } from "../hooks/useSales";
 // Props Interface
 interface Props {
   showSaleForm: boolean;
   setShowSaleForm: Dispatch<React.SetStateAction<boolean>>;
 }
-export interface Sale {
-  id: string;
-  productId: string;
-  productName: string;
-  quantity: number;
-  price: number;
-  total: number;
-  createdAt: string;
-}
+
 export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
   // Selected Product
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -39,6 +34,10 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
   const [saleQuantity, setSaleQuantity] = useState<number>(1);
   // Products Context
   const { products, setProducts } = useProducts();
+  // Sales Context
+  const { setSales } = useSales();
+  // Sales Context
+
   // Handle Sale
   function handelSale() {
     if (!selectedProduct) {
@@ -49,18 +48,25 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
       toast.error("أدخل كمية صحيحة");
       return;
     }
+    if (selectedProduct.quantity === 0) {
+      toast.error("لقد نفذ هذا المنتج");
+      return;
+    }
     if (saleQuantity > selectedProduct.quantity) {
       toast.error("الكمية المطلوبة أكبر من المخزون");
       return;
     }
 
     // Change Product Quantity
-    const updatedProducts = products.map((product) => {
-      if (product.id === selectedProduct?.id) {
-        product.quantity -= saleQuantity;
-      }
-      return product;
-    });
+    const updatedProducts = products.map((product) =>
+      product.id === selectedProduct.id
+        ? {
+            ...product,
+            quantity: product.quantity - saleQuantity,
+          }
+        : product,
+    );
+
     // Set The New Products
     setProducts(updatedProducts);
     // Then Save It Into Local Storage
@@ -68,22 +74,19 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
     // Show Toast
     toast.success("تم تسجيل عملية البيع بنجاح");
     // Save Sales
-    const total = selectedProduct.sellPrice * saleQuantity;
+    const total = selectedProduct.sell_price * saleQuantity;
+
     const sale: Sale = {
       id: uuidv4(),
       productId: selectedProduct.id!,
       productName: selectedProduct.name,
       quantity: saleQuantity,
-      price: selectedProduct.sellPrice,
+      price: selectedProduct.sell_price,
       total: total,
       createdAt: new Date().toISOString(),
     };
-    const storageSales = localStorage.getItem("sales");
-    if (storageSales) {
-      const sales: Sale[] = JSON.parse(storageSales);
-      sales.push(sale);
-      localStorage.setItem("sales", JSON.stringify(sales));
-    } else localStorage.setItem("sales", JSON.stringify([sale]));
+    setSales((prev: Sale[]) => [...prev, sale]);
+
     // Empty The States
     setSelectedProduct(null);
     setSaleQuantity(1);
@@ -93,7 +96,12 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
     setShowSaleForm(false);
     setSelectedProduct(null);
   }
-
+  console.log({
+    selectedProduct,
+    sell_price: selectedProduct?.sell_price,
+    saleQuantity,
+    total: (selectedProduct?.sell_price ?? 0) * saleQuantity,
+  });
   return (
     <section
       className={`absolute inset-0 h-full w-full bg-[#f7f9fd] transition-all
@@ -162,11 +170,15 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
           >
             <option value="">اختر المنتج</option>
 
-            {products.map((product) => (
-              <option key={product.id} value={product.id}>
-                {product.name}
-              </option>
-            ))}
+            {products.map((product) =>
+              product.quantity !== 0 ? (
+                <option key={product.id} value={product.id}>
+                  {product.name}
+                </option>
+              ) : (
+                <></>
+              ),
+            )}
           </select>
         </div>
 
@@ -202,8 +214,8 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
                 <span className="text-gray-600 dark:text-gray-400">السعر:</span>
 
                 <span className="font-bold text-[#0b1c30] dark:text-white">
-                  {selectedProduct?.sellPrice
-                    ? selectedProduct.sellPrice + " "
+                  {selectedProduct?.sell_price
+                    ? selectedProduct.sell_price + " "
                     : " 0 "}
                   جنيه
                 </span>
@@ -267,8 +279,8 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
                         const value = e.target.value;
 
                         if (
-                          typeof value === "number" &&
-                          Number(value) <= Number(selectedProduct?.quantity)
+                          Number(value) >= 1 &&
+                          Number(value) <= (selectedProduct?.quantity ?? 0)
                         ) {
                           setSaleQuantity(Number(value));
                         }
@@ -328,9 +340,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
           </span>
 
           <span className="text-4xl font-bold text-[#005b48] dark:text-[#8BD6B7]">
-            {selectedProduct?.sellPrice
-              ? selectedProduct.sellPrice * saleQuantity
-              : "0 "}
+            {(selectedProduct?.sell_price ?? 0) * saleQuantity}
             جنيه
           </span>
         </div>

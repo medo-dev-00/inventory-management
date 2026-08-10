@@ -65,6 +65,7 @@ export default function ProductsTable({
       setProductInfo(selectedProduct);
     }
   }
+
   return (
     <>
       {position === "products" ? (
@@ -170,7 +171,8 @@ export default function ProductsTable({
                       <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600 dark:bg-red-800 dark:text-red-100">
                         نفذ
                       </span>
-                    ) : Number(product.quantity) <= Number(product.min_stock) ? (
+                    ) : Number(product.quantity) <=
+                      Number(product.min_stock) ? (
                       <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700 dark:bg-yellow-800 dark:text-yellow-100">
                         قليل
                       </span>
