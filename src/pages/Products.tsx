@@ -38,14 +38,29 @@ export default function Products({
     setShownProducts(parsedProducts);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (storageProducts)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setShownProducts(JSON.parse(storageProducts));
+  }, [storageProducts]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    handleFiltration();
+  }, [search, categoryFilter, products]);
   function handleFiltration() {
-    if (categoryFilter === "all") {
-      setShownProducts(products);
-      return;
-    }
-    const filteredProducts = products.filter(
-      (product) => product.category === value,
-    );
+    const filteredProducts = products.filter((product) => {
+      setCategoryFilter((p) => p);
+      setSearch((p) => p);
+      const matchesCategory =
+        categoryFilter === "all" || product.category === categoryFilter;
+
+      const matchesSearch =
+        search.trim() === "" ||
+        product.name.toLowerCase().includes(search.toLowerCase().trim());
+
+      return matchesCategory && matchesSearch;
+    });
+
     setShownProducts(filteredProducts);
   }
   return (
@@ -94,7 +109,6 @@ export default function Products({
             onChange={(e) => {
               const value = e.target.value;
               setSearch(value);
-              handleFiltration();
             }}
           />
         </div>
@@ -107,7 +121,6 @@ export default function Products({
           onChange={(e) => {
             const value = e.target.value;
             setCategoryFilter(value);
-            handleFiltration();
           }}
         >
           <option value="all" key={0}>
@@ -131,6 +144,7 @@ export default function Products({
         id={id}
         setId={setId}
         shownProducts={shownProducts}
+        setShownProducts={setShownProducts}
       />
     </motion.section>
   );

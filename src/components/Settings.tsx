@@ -1,5 +1,7 @@
-import { type Dispatch } from "react";
+import { useEffect, type Dispatch } from "react";
+
 import { FaMoon, FaSun } from "react-icons/fa";
+
 import { FaX } from "react-icons/fa6";
 
 interface Props {
@@ -15,8 +17,12 @@ export default function Settings({
   setTheme,
   theme,
 }: Props) {
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
   return (
     <div
+      dir="rtl"
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-all duration-300 ${
         showSettings ? "visible opacity-100" : "invisible opacity-0"
       }`}
@@ -52,41 +58,35 @@ export default function Settings({
         </div>
 
         {/* Language */}
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <h3 className="font-semibold text-[#3F4944] dark:text-gray-200">
             اللغة
           </h3>
 
           <div className="mt-3 grid grid-cols-2 gap-3">
-            {/* Arabic */}
             <button
-              className="
-                rounded-xl border p-4 font-semibold
-                transition hover:-translate-y-0.5
-                border-gray-200 bg-white text-gray-800
-                hover:bg-gray-50
-                dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200
-                dark:hover:bg-gray-700
-              "
+              onClick={() => i18n.changeLanguage("ar")}
+              className={`rounded-xl border p-4 font-semibold transition-all ${
+                i18n.language === "ar"
+                  ? "border-[#065F46] bg-[#065F46] text-white"
+                  : "border-gray-200 bg-white text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              }`}
             >
               العربية
             </button>
 
-            {/* English */}
             <button
-              className="
-                rounded-xl border p-4 font-semibold
-                transition hover:-translate-y-0.5
-                border-gray-200 bg-white text-gray-800
-                hover:bg-gray-50
-                dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200
-                dark:hover:bg-gray-700
-              "
+              onClick={() => i18n.changeLanguage("en")}
+              className={`rounded-xl border p-4 font-semibold transition-all ${
+                i18n.language === "en"
+                  ? "border-[#065F46] bg-[#065F46] text-white"
+                  : "border-gray-200 bg-white text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              }`}
             >
               English
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Theme */}
         <div className="mt-8">

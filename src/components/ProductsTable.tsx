@@ -18,6 +18,7 @@ interface Props {
   id: string | undefined;
   setId: Dispatch<React.SetStateAction<string | undefined>>;
   shownProducts: Product[];
+  setShownProducts: Dispatch<React.SetStateAction<Product[]>>;
 }
 export default function ProductsTable({
   setShowForm,
@@ -26,6 +27,7 @@ export default function ProductsTable({
   id,
   setId,
   shownProducts,
+  setShownProducts,
 }: Props) {
   // Products Context
   const { products, setProducts } = useProducts();
@@ -40,6 +42,7 @@ export default function ProductsTable({
     if (updatedProducts) {
       // Set The New Products
       setProducts(updatedProducts);
+      setShownProducts(updatedProducts);
       // Then Save It To Local Storage
       localStorage.setItem("products", JSON.stringify(updatedProducts));
       // Close The Dialog | Modal
@@ -75,22 +78,27 @@ export default function ProductsTable({
       )}
       {products.length === 0 ? (
         <div className="flex min-h-100 flex-col items-center justify-center px-6 text-center">
-          <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#eff4ff]">
-            <FaBoxOpen className="text-4xl text-[#004532]" />
+          <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#eff4ff] dark:bg-[#004532]">
+            <FaBoxOpen className="text-5xl text-[#004532] dark:text-green-100" />
           </div>
 
-          <h3 className="text-xl font-bold text-[#0b1c30]">
+          <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
             لا توجد منتجات حتى الآن
           </h3>
 
-          <p className="mt-2 max-w-md text-sm text-gray-500">
+          <p className="mt-2 max-w-md text-sm text-gray-500 dark:text-gray-400">
             لم تقم بإضافة أي منتجات إلى المخزون بعد. ابدأ بإضافة أول منتج لإدارة
             مخزونك بسهولة.
           </p>
 
           <button
             onClick={() => setShowForm(true)}
-            className="mt-6 flex items-center gap-2 rounded-lg bg-[#004532] px-5 py-2.5 text-white transition hover:bg-[#065f46]"
+            className="
+    mt-6 flex items-center gap-2 rounded-lg
+    bg-[#004532] px-5 py-2.5 text-white
+    transition hover:bg-[#065f46]
+    dark:bg-[#006b50] dark:hover:bg-[#008060]
+  "
           >
             <FaPlus />
             إضافة منتج
@@ -146,7 +154,7 @@ export default function ProductsTable({
 
                   {/* Price */}
                   <td className="px-6 pt-8 font-medium">
-                    {product.sellPrice} جنيه
+                    {product.sell_price} جنيه
                   </td>
 
                   {/* Quantity */}
@@ -162,7 +170,7 @@ export default function ProductsTable({
                       <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600 dark:bg-red-800 dark:text-red-100">
                         نفذ
                       </span>
-                    ) : Number(product.quantity) <= Number(product.minStock) ? (
+                    ) : Number(product.quantity) <= Number(product.min_stock) ? (
                       <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700 dark:bg-yellow-800 dark:text-yellow-100">
                         قليل
                       </span>

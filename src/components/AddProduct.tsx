@@ -45,10 +45,10 @@ export default function AddProduct({
       name: "",
       description: "",
       category: "مأكولات",
-      buyPrice: 0,
-      sellPrice: 0,
+      buy_price: 0,
+      sell_price: 0,
       quantity: 0,
-      minStock: 0,
+      min_stock: 0,
       image: null,
       createdAt: date,
     });
@@ -58,7 +58,7 @@ export default function AddProduct({
     // Validation
     if (
       productInfo.name.trim().length < 3 ||
-      productInfo.sellPrice <= 0 ||
+      productInfo.sell_price <= 0 ||
       productInfo.quantity < 0
     ) {
       toast.error("يجب إدخال البيانات المطلوبة");
@@ -115,7 +115,7 @@ export default function AddProduct({
 
   return (
     <section
-      className={`w-full h-full bg-[#f7f9fd]  absolute inset-0 pt-10  ${showForm ? "opacity-100 visible" : "opacity-0 invisible"} transition-all`}
+      className={`w-full h-full bg-[#f7f9fd]  absolute inset-0 pt-10  ${showForm ? "opacity-100 visible" : "opacity-0 invisible"} transition-all dark:bg-[#011119]`}
     >
       {/* Header */}
       <div className="pr-8 flex max-w-7xl items-center gap-4">
@@ -125,17 +125,17 @@ export default function AddProduct({
             resetForm();
             setShowForm(false);
           }}
-          className="flex cursor-pointer items-center gap-2 transition-all hover:translate-x-1"
+          className="flex cursor-pointer items-center gap-2 transition-all hover:translate-x-1 dark:text-white"
         >
           <FaArrowRight size={30} />
         </button>
 
         <div>
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold dark:text-white">
             {id ? "تعديل المنتج" : "إضافة منتج جديد"}
           </h1>
 
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-gray-500 dark:text-gray-400">
             {id
               ? "قم بتعديل بيانات المنتج"
               : "أدخل تفاصيل المنتج الجديد لإضافته إلى المخزون"}
@@ -147,7 +147,7 @@ export default function AddProduct({
       <ProductForm productInfo={productInfo} setProductInfo={setProductInfo} />
 
       {/* Actions */}
-      <div className="mx-auto mt-8 flex max-w-7xl justify-end gap-3">
+      <div className="mx-auto mt-8 flex max-w-7xl justify-end gap-3 px-10">
         {/* Cancel */}
         <button
           type="button"
@@ -155,7 +155,7 @@ export default function AddProduct({
             setId(undefined);
             setShowForm(false);
           }}
-          className="flex cursor-pointer items-center gap-2 rounded-sm border border-gray-300 px-6 py-2 text-[#004532] transition-all hover:scale-[1.02] hover:bg-gray-100"
+          className="flex cursor-pointer items-center gap-2 rounded-sm border border-gray-300 px-6 py-2 text-[#004532] transition-all hover:scale-[1.02] hover:bg-gray-100 dark:text-white dark:hover:bg-[#002113]"
         >
           إلغاء
         </button>

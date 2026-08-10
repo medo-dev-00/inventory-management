@@ -16,7 +16,11 @@
   src: url("./fonts/IBMPlexSansArabic-SemiBold.ttf");
   font-weight: 600;
 }
-
+@font-face {
+  font-family: Gothic;
+  src: url("./fonts/ScienceGothic-Bold.ttf");
+  font-weight: 700;
+}
 * {
   transition: 0.3s ease;
 }
@@ -48,6 +52,15 @@ body {
   width: 100%;
 }
 
+html.dark .add-form input,
+html.dark .add-form textarea {
+  background-color: #001e2c;
+  color: #ffffff;
+}
+
+html.dark .add-form label {
+  color: rgb(206, 221, 240);
+}
 .add-form input:focus {
   outline: none;
   border-color: #c3cac5;

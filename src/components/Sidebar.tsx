@@ -59,7 +59,7 @@ export default function Sidebar() {
       <aside
         className={`
           fixed right-0 top-0 z-50
-          flex h-screen w-72
+          flex h-screen w-90
           flex-col
           bg-[#EFF4FF]
           p-4
@@ -72,8 +72,8 @@ export default function Sidebar() {
       >
         {/* Logo / Header */}
         <div className="mb-8 flex h-14 items-center gap-4 rounded-xl px-3">
-          <span className="text-2xl font-bold text-[#065F46] dark:text-[#8BD6B7] mr-auto">
-            Inventro
+          <span className="text-2xl font-bold text-[#065F46] dark:text-[#8BD6B7] mr-auto font-[Gothic]">
+            Inventory True
           </span>
         </div>
 
@@ -94,17 +94,6 @@ export default function Sidebar() {
             <span className="text-xl font-semibold">السجل</span>
           </NavLink>
         </nav>
-
-        {/* Bottom */}
-        <div className="mt-auto">
-          <div className="h-px w-full bg-gray-200 dark:bg-gray-800" />
-
-          <div className="mt-4 flex h-12 items-center gap-3 rounded-xl px-3 text-sm text-gray-500 dark:text-gray-400">
-            <div className="h-8 w-8 min-w-8 rounded-full bg-[#065F46]" />
-
-            <span>حساب المستخدم</span>
-          </div>
-        </div>
       </aside>
     </>
   );

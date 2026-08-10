@@ -8,13 +8,13 @@ export interface Product {
 
   category: string;
 
-  buyPrice: number;
+  buy_price: number;
 
-  sellPrice: number;
+  sell_price: number;
 
   quantity: number;
 
-  minStock: number;
+  min_stock: number;
 
   image: string | null;
 

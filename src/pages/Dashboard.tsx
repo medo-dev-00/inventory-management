@@ -1,5 +1,6 @@
 import type { Dispatch } from "react";
 import { useProducts } from "../hooks/useProducts";
+
 import ProductsTable from "../components/ProductsTable";
 import { useEffect, useState } from "react";
 import { type Product } from "../context/ProductsContext";
@@ -34,6 +35,7 @@ export default function Dashboard({
     if (storageSales) {
       return JSON.parse(storageSales);
     }
+    return [];
   });
   const [totalMonthSales, setTotalMonthSales] = useState<number>();
   const [todaySales, setTodaySales] = useState<number>();
@@ -48,6 +50,7 @@ export default function Dashboard({
   useEffect(() => {
     const now = new Date();
     // Get Month`s Sales
+
     const monthSales = sales
       .filter((sale) => {
         const saleDate = new Date(sale.createdAt);
@@ -59,22 +62,21 @@ export default function Dashboard({
         }
       })
       .map((sale) => sale.total)
-      .reduce((a, c) => a + c);
+      .reduce((a, c) => a + c, 0);
 
     // Get Today`s Sales
     const todaySales = sales
       .filter((sale) => {
         const saleDate = new Date(sale.createdAt);
-        if (
+
+        return (
           saleDate.getFullYear() === now.getFullYear() &&
           saleDate.getMonth() === now.getMonth() &&
-          saleDate.getDay() === now.getDay()
-        ) {
-          return sale;
-        }
+          saleDate.getDate() === now.getDate()
+        );
       })
       .map((sale) => sale.total)
-      .reduce((a, c) => a + c);
+      .reduce((a, c) => a + c, 0);
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTotalMonthSales(monthSales);
@@ -85,7 +87,7 @@ export default function Dashboard({
   const categories = [...new Set(products.map((product) => product.category))];
   // MinStock Categories Count
   const minStockProducts = products.filter((product) => {
-    return product.quantity <= product.minStock;
+    return product.quantity <= product.min_stock;
   });
   // OutOfStock Products Count
   const outOfStockProducts = products.filter((product) => {
@@ -98,7 +100,9 @@ export default function Dashboard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 100 }}
     >
-      <h1 className="text-7xl mb-10 dark:text-white">لوحة التحكم</h1>
+      <h1 className="text-5xl mb-10 font-semibold dark:text-white">
+        لوحة التحكم
+      </h1>
       <div className="flex gap-4 flex-wrap max-[920px]:ml-20 mx-20 ">
         <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card dark:bg-[#131B2E] dark:text-white">
           <div>
@@ -126,7 +130,7 @@ export default function Dashboard({
         <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card dark:bg-[#131B2E] dark:text-white">
           <div>
             <h2 className="text-xl font-semibold text-gray-500 dark:text-gray-300">
-              اجمالي الميعات
+              اجمالي المبيعات
             </h2>
             <h3 className="text-3xl font-bold">{totalMonthSales} جنيه</h3>
             <span>هذا الشهر</span>
@@ -149,7 +153,7 @@ export default function Dashboard({
         <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card dark:bg-[#131B2E] dark:text-white">
           <div>
             <h2 className="text-xl font-semibold text-gray-500 dark:text-gray-300">
-              المنتجات قليلة الكمية
+              المنتجات القليلة في المخزون
             </h2>
             <h3 className="text-3xl font-bold">{minStockProducts.length}</h3>
           </div>
@@ -160,7 +164,7 @@ export default function Dashboard({
         <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card dark:bg-[#131B2E] dark:text-white">
           <div>
             <h2 className="text-xl font-semibold text-gray-500 dark:text-gray-300">
-              المنتجات غير المتوفرة
+              المنتجات خارج المخزون
             </h2>
             <h3 className="text-3xl font-bold">{outOfStockProducts.length}</h3>
           </div>
@@ -176,26 +180,61 @@ export default function Dashboard({
         setProductInfo={setProductInfo}
         setShowForm={setShowForm}
         shownProducts={products}
+        setShownProducts={setProducts}
       />
-      <div className="absolute bottom-10 flex items-center bg-white shadow-md p-5 rounded-md border border-gray-300 max-lg:static w-fit my-10 dark:bg-[#00354A] dark:border-blue-950">
-        <h3 className="dark:text-white">اجراءات سريعة</h3>
-        <div className="w-0.5 py-3 bg-gray-200 mx-2 rounded-2xl"></div>
+      <div
+        className="
+    fixed bottom-10 my-10 flex w-fit items-center
+    rounded-md border border-gray-300 bg-white p-5 shadow-md
+    max-lg:static
+    dark:border-[#1F2937]
+    dark:bg-[#131B2E]
+    dark:shadow-black/20
+  "
+      >
+        <h3 className="text-[#0b1c30] dark:text-white">إجراءات سريعة</h3>
+
+        <div className="mx-2 w-0.5 rounded-2xl bg-gray-200 py-3 dark:bg-gray-700"></div>
+
         <div className="flex gap-4">
+          {/* إضافة منتج */}
           <button
-            className="bg-[#004532] text-white rounded-xl px-6 py-2 font-semibold flex gap-2 items-center cursor-pointer hover:scale-102 transition-all dark:bg-[#002113]"
-            onClick={() => setShowForm(true)}
+            className="
+        flex cursor-pointer items-center gap-2
+        rounded-xl bg-[#004532] px-6 py-2
+        font-semibold text-white
+        transition-all hover:scale-102 hover:bg-[#065F46]
+
+        dark:bg-[#006B50]
+        dark:hover:bg-[#008060]
+      "
+            onClick={() => {
+              setShowForm(true);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
           >
             <FaPlus size={20} />
-            اضافة منتج
+            إضافة منتج
           </button>
+
+          {/* بيع جديد */}
           <button
-            className="bg-[#D3E4FE] rounded-xl px-6 py-2 flex gap-2 font-semibold items-center cursor-pointer hover:scale-102 transition-all dark:bg-[#00668A] dark:text-[#001E2C]"
-            onClick={() => setShowSaleForm(true)}
+            className="
+        flex cursor-pointer items-center gap-2
+        rounded-xl bg-[#D3E4FE] px-6 py-2
+        font-semibold text-[#293e5d]
+        transition-all hover:scale-102 hover:bg-[#C3D9FC]
+
+        dark:bg-[#00668A]
+        dark:text-white
+        dark:hover:bg-[#007FA8]
+      "
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setShowSaleForm(true);
+            }}
           >
-            <LuReceipt
-              size={20}
-              className="text-[#293e5d] dark:text-[#131e30]"
-            />
+            <LuReceipt size={20} />
             بيع جديد
           </button>
         </div>

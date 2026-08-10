@@ -22,8 +22,17 @@ import AddProduct from "./components/AddProduct";
 import AddSale from "./components/SellProduct";
 import SalesHistory from "./pages/SalesHistory";
 import Settings from "./components/Settings";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    const isArabic = i18n.language === "ar";
+
+    document.documentElement.dir = isArabic ? "rtl" : "ltr";
+    document.documentElement.lang = isArabic ? "ar" : "en";
+  }, [i18n.language]);
   const location = useLocation();
   const date = new Intl.DateTimeFormat("ar-EG", {
     day: "numeric",
@@ -40,17 +49,25 @@ function App() {
     name: "",
     description: "",
     category: "/",
-    buyPrice: 0,
-    sellPrice: 0,
+    buy_price: 0,
+    sell_price: 0,
     quantity: 0,
-    minStock: 0,
+    min_stock: 0,
     image: null,
     createdAt: date,
   });
   // Set Product Id
   const [id, setId] = useState<string | undefined>();
   const [showSettings, setShowSettings] = useState<boolean>(false);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    const savedTheme = localStorage.getItem("theme");
+    // If The Saved Theme in locale storage is dark or light return it
+    if (savedTheme === "dark" || savedTheme === "light") {
+      return savedTheme;
+    }
+
+    return "light";
+  });
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
@@ -59,9 +76,11 @@ function App() {
     setShowForm(false);
     setShowSaleForm(false);
   }, [location.pathname]);
+  useEffect(() => {}, []);
   return (
     <ProductProvider>
       <Toaster position="top-center" />
+
       <Settings
         setShowSettings={setShowSettings}
         showSettings={showSettings}
@@ -69,8 +88,8 @@ function App() {
         theme={theme}
       />
       <main
+        className="flex min-h-dvh h-full bg-white dark:bg-[#000f16] pb-50"
         dir="rtl"
-        className="flex min-h-dvh h-full bg-white dark:bg-[#000f16]"
       >
         <Sidebar />
 
@@ -103,8 +122,8 @@ function App() {
                 }
               />
               <Route path="/history" element={<SalesHistory />} />
-              {/* Default Route */}
               <Route path="*" element={<Navigate to={"/dashboard"} />} />
+              {/* Default Route */}
             </Routes>
             <AddProduct
               showForm={showForm}
