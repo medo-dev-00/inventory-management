@@ -40,17 +40,6 @@ cd inventory-management
 npm install
 ```
 
-### 3. Configure environment variables
-
-Create a `.env` file in the project root:
-
-```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-Do not commit your `.env` file to GitHub.
-
 ### 4. Start the development server
 
 ```bash
@@ -70,12 +59,6 @@ Preview the production build:
 ```bash
 npm run preview
 ```
-
-## Environment
-
-This project uses Supabase for authentication and database services.
-
-Make sure your Supabase project is configured before using authentication or database features.
 
 ## Project Structure
 
