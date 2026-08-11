@@ -20,7 +20,7 @@ import Products from "./pages/Products";
 import Header from "./components/Header";
 import AddProduct from "./components/AddProduct";
 import AddSale from "./components/SellProduct";
-import SalesHistory from "./pages/SalesHistory";
+import Sales from "./pages/Sales";
 import Settings from "./components/Settings";
 import { useTranslation } from "react-i18next";
 import { SalesProvider } from "./context/SalesProvider";
@@ -83,8 +83,18 @@ function App() {
 
   return (
     <ProductProvider>
-      <Toaster position="top-center" />
-
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: theme === "dark" ? "#131B2E" : "#FFFFFF",
+            color: theme === "dark" ? "#FFFFFF" : "#0F172A",
+            border:
+              theme === "dark" ? "1px solid #334155" : "1px solid #E2E8F0",
+          },
+        }}
+      />
       <Settings
         setShowSettings={setShowSettings}
         showSettings={showSettings}
@@ -93,7 +103,7 @@ function App() {
       />
       <SalesProvider>
         <main
-          className="flex min-h-dvh h-full bg-white dark:bg-[#000f16] pb-50"
+          className="flex min-h-dvh h-full bg-[#fafafa] dark:bg-[#000f16] pb-50"
           dir="rtl"
         >
           <Sidebar />
@@ -108,6 +118,7 @@ function App() {
                     <Dashboard
                       setShowForm={setShowForm}
                       setShowSaleForm={setShowSaleForm}
+                      theme={theme}
                     />
                   }
                 />
@@ -123,7 +134,7 @@ function App() {
                     />
                   }
                 />
-                <Route path="/history" element={<SalesHistory />} />
+                <Route path="/sales" element={<Sales />} />
                 <Route path="*" element={<Navigate to={"/dashboard"} />} />
                 {/* Default Route */}
               </Routes>

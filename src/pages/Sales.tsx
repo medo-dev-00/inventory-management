@@ -23,11 +23,11 @@ export default function SalesTable() {
       <div className="flex justify-between items-center border-b border-b-gray-200 pb-4 dark:border-b-cyan-950">
         <div>
           <h2 className="text-4xl font-bold text-[#0b1c30] dark:text-white">
-            سجل المبيعات
+            جميع المبيعات{" "}
           </h2>
 
           <p className="text-xl text-[#3F4944] dark:text-[#9DACC2]">
-            جميع عمليات البيع المسجلة
+            جميع عمليات البيع والارباح المسجلة
           </p>
         </div>
 
@@ -43,11 +43,11 @@ export default function SalesTable() {
             <LuReceipt size={40} className="text-[#065F46]" />
           </div>
 
-          <h3 className="mt-5 text-xl font-bold text-gray-800">
+          <h3 className="mt-5 text-xl font-bold text-gray-800 dark:text-white">
             لا توجد عمليات بيع
           </h3>
 
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-gray-400">
             لم يتم تسجيل أي عملية بيع حتى الآن
           </p>
         </div>

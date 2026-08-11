@@ -70,11 +70,10 @@ export default function Products({
   }
   return (
     <motion.section
-      className="relative px-10 pt-10 bg-white dark:bg-[#000f16]"
+      className="relative px-10 pt-10 bg-inherit "
       initial={{ opacity: 0 }}
       animate={{ opacity: 100 }}
     >
-     
       <div className="flex justify-between items-center border-b-gray-200 dark:border-b-cyan-950 border-b pb-4 max-lg:justify-start max-lg:gap-10 max-md:flex-col">
         <div>
           <h2 className="text-4xl font-bold text-black dark:text-white">
@@ -123,9 +122,9 @@ export default function Products({
           <div className="max-w-60 px-2 flex-1 relative  max-lg:h-12 max-lg:max-w-full">
             <label
               htmlFor="filter-by-category"
-              className="absolute top-1/2 -translate-y-1/2 right-8"
+              className="absolute top-1/2 -translate-y-1/2 right-8 dark:text-gray-300"
             >
-              الترتيب:
+              الترتيب :
             </label>
             <select
               name="filterByCategory"
@@ -148,9 +147,9 @@ export default function Products({
           <div className="max-w-60 px-2 flex-1 relative max-lg:h-12 max-lg:max-w-full">
             <label
               htmlFor="filter-by-category"
-              className="absolute top-1/2 -translate-y-1/2 right-8"
+              className="absolute top-1/2 -translate-y-1/2 right-8 dark:text-gray-300"
             >
-              الفئة:
+              الفئة :
             </label>
             <select
               name="filterByCategory"
@@ -179,7 +178,6 @@ export default function Products({
         </div>
       </div>
       <ProductsTable
-        position="products"
         setShowForm={setShowForm}
         setProductInfo={setProductInfo}
         id={id}

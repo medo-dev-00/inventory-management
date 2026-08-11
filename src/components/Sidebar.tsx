@@ -1,7 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { MdOutlineDashboard } from "react-icons/md";
-import { FaBars, FaHistory } from "react-icons/fa";
-import { FaBoxArchive, FaX } from "react-icons/fa6";
+import { FaBars } from "react-icons/fa";
+
+import { FaBoxArchive, FaX, FaMoneyBills } from "react-icons/fa6";
 import { useState } from "react";
 
 export default function Sidebar() {
@@ -89,9 +90,9 @@ export default function Sidebar() {
             <span className="text-xl font-semibold">المنتجات</span>
           </NavLink>
 
-          <NavLink to="/history" onClick={closeSidebar} className={linkClass}>
-            <FaHistory size={23} className="min-w-6.25" />
-            <span className="text-xl font-semibold">السجل</span>
+          <NavLink to="/sales" onClick={closeSidebar} className={linkClass}>
+            <FaMoneyBills size={23} className="min-w-6.25" />
+            <span className="text-xl font-semibold">المبيعات</span>
           </NavLink>
         </nav>
       </aside>

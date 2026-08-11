@@ -13,7 +13,6 @@ import { FaRegImage } from "react-icons/fa6";
 // Props Type Interface
 interface Props {
   setShowForm: Dispatch<React.SetStateAction<boolean>>;
-  position: "dashboard" | "products";
   setProductInfo: Dispatch<React.SetStateAction<Product>>;
   id: string | undefined;
   setId: Dispatch<React.SetStateAction<string | undefined>>;
@@ -22,7 +21,6 @@ interface Props {
 }
 export default function ProductsTable({
   setShowForm,
-  position,
   setProductInfo,
   id,
   setId,
@@ -68,15 +66,12 @@ export default function ProductsTable({
 
   return (
     <>
-      {position === "products" ? (
-        <Dialog
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          handleDelete={() => handleDelete(id)}
-        />
-      ) : (
-        <></>
-      )}
+      <Dialog
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        handleDelete={() => handleDelete(id)}
+      />
+
       {products.length === 0 ? (
         <div className="flex min-h-100 flex-col items-center justify-center px-6 text-center">
           <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#eff4ff] dark:bg-[#004532]">
@@ -95,18 +90,17 @@ export default function ProductsTable({
           <button
             onClick={() => setShowForm(true)}
             className="
-    mt-6 flex items-center gap-2 rounded-lg
-    bg-[#004532] px-5 py-2.5 text-white
-    transition hover:bg-[#065f46]
-    dark:bg-[#006b50] dark:hover:bg-[#008060]
-  "
+             mt-6 flex items-center gap-2 rounded-lg
+           bg-[#004532] px-5 py-2.5 text-white
+             transition hover:bg-[#065f46]
+           dark:bg-[#006b50] dark:hover:bg-[#008060]"
           >
             <FaPlus />
             إضافة منتج
           </button>
         </div>
       ) : (
-        <div className="overflow-x-auto scrollbar-thumb-gray-900 scrollbar-">
+        <div className="overflow-x-auto scrollbar-thumb-blue-950">
           <table className="w-full min-w-200 max-w-500 text-right mx-auto border border-gray-200 mt-10 dark:border-cyan-950  ">
             <thead>
               <tr className="bg-[#f7f9fd] text-[#3F4944] dark:bg-[#001E2C] dark:text-[#f7f9fd]">
@@ -115,9 +109,7 @@ export default function ProductsTable({
                 <th className="px-6 py-4 font-semibold">السعر</th>
                 <th className="px-6 py-4 font-semibold">الكمية</th>
                 <th className="px-6 py-4 font-semibold">الحالة</th>
-                <th className="px-6 py-4 font-semibold">
-                  {position === "products" ? "الإجراءات" : "تاريخ الإضافة"}
-                </th>
+                <th className="px-6 py-4 font-semibold">"الإجراءات"</th>
               </tr>
             </thead>
 
@@ -183,42 +175,30 @@ export default function ProductsTable({
                     )}
                   </td>
 
-                  {/* Actions / Date */}
-                  {position === "products" ? (
-                    <td className="px-6 py-6">
-                      <div className="flex items-center gap-2">
-                        <button
-                          className="rounded-md bg-[#078a65] px-3 py-1.5 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#067957]"
-                          onClick={() => {
-                            setId(product.id);
-                            handleEdit(product.id);
-                          }}
-                        >
-                          تعديل
-                        </button>
+                  {/* Actions */}
+                  <td className="px-6 py-6">
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="rounded-md bg-[#078a65] px-3 py-1.5 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#067957]"
+                        onClick={() => {
+                          setId(product.id);
+                          handleEdit(product.id);
+                        }}
+                      >
+                        تعديل
+                      </button>
 
-                        <button
-                          className="rounded-md bg-[#880b0b] px-3 py-1.5 text-white transition-all hover:-translate-y-0.5 hover:bg-[#6f0808]"
-                          onClick={() => {
-                            setId(product.id);
-                            setIsModalOpen(true);
-                          }}
-                        >
-                          حذف
-                        </button>
-                      </div>
-                    </td>
-                  ) : (
-                    <td className="px-6 pt-8 text-gray-600 dark:text-gray-200">
-                      {product.createdAt
-                        ? new Intl.DateTimeFormat("ar-EG", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }).format(new Date(product.createdAt))
-                        : "-"}
-                    </td>
-                  )}
+                      <button
+                        className="rounded-md bg-[#880b0b] px-3 py-1.5 text-white transition-all hover:-translate-y-0.5 hover:bg-[#6f0808]"
+                        onClick={() => {
+                          setId(product.id);
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

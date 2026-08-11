@@ -1,5 +1,5 @@
 import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Sale {
   productId: string;
@@ -9,34 +9,14 @@ interface Sale {
   createdAt: string;
 }
 
-export default function BestSellingProducts() {
+export default function BestSellingProducts({ isDark }: { isDark: boolean }) {
   const [sales] = useState<Sale[]>(() => {
     const storageSales = localStorage.getItem("sales");
-
     if (storageSales) {
       return JSON.parse(storageSales);
     }
-
     return [];
   });
-
-  const [isDark, setIsDark] = useState(
-    document.documentElement.classList.contains("dark"),
-  );
-
-  // متابعة الـ dark mode
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDark(document.documentElement.classList.contains("dark"));
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   // تجميع المبيعات حسب المنتج
   const productSales = sales.reduce<

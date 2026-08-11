@@ -91,7 +91,7 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
   }
   return (
     <form
-      className="flex bg-inherit add-form pt-10 px-10 gap-8 w-full max-lg:flex-col "
+      className="flex bg-inherit add-form p-10 px-10 gap-8 w-full max-lg:flex-col overflow-hidden"
       onSubmit={(e) => {
         e.preventDefault();
       }}

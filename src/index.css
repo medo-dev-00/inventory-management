@@ -21,7 +21,7 @@
   src: url("./fonts/ScienceGothic-Bold.ttf");
   font-weight: 700;
 }
-* {
+*:not(.duration-100) {
   transition: 0.3s ease;
 }
 body {
@@ -30,7 +30,7 @@ body {
 }
 
 .card {
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.03);
   border: 0.2px solid rgba(128, 128, 128, 0.124);
 }
 

@@ -115,7 +115,7 @@ export default function AddProduct({
 
   return (
     <section
-      className={`w-full h-full bg-[#f7f9fd]  absolute inset-0 pt-10  ${showForm ? "opacity-100 visible" : "opacity-0 invisible"} transition-all dark:bg-[#011119]`}
+      className={`w-full h-full bg-[#f7f9fd]  absolute inset-0 pt-10  ${showForm ? "visible opacity-100 " : " invisible opacity-0 "} dark:bg-[#011119] transition-all duration-100`}
     >
       {/* Header */}
       <div className="pr-8 flex max-w-7xl items-center gap-4">
@@ -152,8 +152,8 @@ export default function AddProduct({
         <button
           type="button"
           onClick={() => {
-            setId(undefined);
             setShowForm(false);
+            setId(undefined);
           }}
           className="flex cursor-pointer items-center gap-2 rounded-sm border border-gray-300 px-6 py-2 text-[#004532] transition-all hover:scale-[1.02] hover:bg-gray-100 dark:text-white dark:hover:bg-[#002113]"
         >

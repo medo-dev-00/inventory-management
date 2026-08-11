@@ -58,7 +58,7 @@ export default function Cards() {
   // Categories Count
   const categories = [...new Set(products.map((product) => product.category))];
   return (
-    <div className="flex gap-4 flex-wrap max-[920px]:ml-20 mx-20 ">
+    <div className="flex gap-4 flex-wrap  ">
       <div className="flex-1 flex justify-between items-center basis-80 rounded-sm bg-white p-8 card dark:bg-[#131B2E] dark:text-white">
         <div>
           <h2 className="text-xl font-semibold text-gray-500 dark:text-gray-300">

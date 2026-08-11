@@ -106,7 +106,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
   });
   return (
     <section
-      className={`absolute inset-0 h-full w-full bg-[#f7f9fd] transition-all
+      className={`absolute inset-0 h-full w-full px-2 bg-[#f7f9fd] transition-all duration-100
     dark:bg-[#000f16]
     ${showSaleForm ? "visible opacity-100" : "invisible opacity-0"}`}
     >
@@ -120,7 +120,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
       text-right
 
       dark:border-gray-800
-      dark:bg-[#0D1C2D]
+      dark:bg-transparent
     "
       >
         <button
@@ -159,7 +159,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
           </label>
 
           <select
-            className="w-full bg-[#eff4ff] p-2 text-[#0b1c30] dark:bg-[#0D1C2D] dark:text-white"
+            className="w-full bg-[#eff4ff] p-2 text-[#0b1c30] dark:bg-[#06111c] dark:text-white"
             value={selectedProduct?.id ?? ""}
             onChange={(e) => {
               const product = products.find(
@@ -187,7 +187,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
         {/* Product Details + Sale Details */}
         <div className="mt-10 grid grid-cols-1 gap-8 xl:grid-cols-2">
           {/* Product Information */}
-          <div className="rounded-lg bg-[#dfeaff] p-8 dark:bg-[#131B2E]">
+          <div className="rounded-lg bg-[#dfeaff] p-8 dark:bg-[#06111c]">
             <div className="mb-6 flex items-center justify-end gap-3">
               <h2 className="text-2xl font-bold text-[#0b1c30] dark:text-white">
                 معلومات المنتج
@@ -239,7 +239,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
           </div>
 
           {/* Sale Details */}
-          <div className="rounded-lg bg-[#dfeaff] p-8 dark:bg-[#131B2E]">
+          <div className="rounded-lg bg-[#dfeaff] p-8 dark:bg-[#06111c]">
             <div>
               <div className="mb-6 flex items-center justify-end gap-3">
                 <h2 className="text-2xl font-bold text-[#0b1c30] dark:text-white">
@@ -305,7 +305,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
 
                 <div className="mt-8 flex items-center justify-between">
                   <button
-                    className="rounded-md bg-[#004f3b] px-4 py-2 font-semibold text-white transition-all hover:-translate-y-0.5 dark:bg-[#006B50] dark:hover:bg-[#008060]"
+                    className="rounded-md bg-[#004f3b] px-4 py-2 font-semibold text-white transition-all hover:-translate-y-0.5 dark:bg-[#044635] dark:hover:bg-[#008060]"
                     onClick={() => {
                       if (selectedProduct) {
                         setSaleQuantity(selectedProduct.quantity);
@@ -336,7 +336,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
         </div>
 
         {/* Total */}
-        <div className="mt-10 flex items-center justify-between rounded-lg border bg-[#dceaff] px-8 py-8 dark:bg-[#00354A]">
+        <div className="mt-10 flex items-center justify-between rounded-lg border bg-[#dceaff] px-8 py-8 dark:bg-[#06111c]">
           <span className="text-3xl font-semibold text-[#0b1c30] dark:text-white">
             إجمالي العملية
           </span>
@@ -354,7 +354,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
         <div className="flex items-center gap-5">
           <button
             type="button"
-            className="flex items-center gap-3 rounded-md bg-[#004f3b] px-7 py-3 text-lg font-semibold text-white transition hover:bg-[#003d2e] dark:bg-[#006B50] dark:hover:bg-[#008060]"
+            className="flex items-center gap-3 rounded-md bg-[#004f3b] px-7 py-3 text-lg font-semibold text-white transition hover:bg-[#003d2e] dark:bg-[#044635] dark:hover:bg-[#008060]"
             onClick={(e) => {
               e.preventDefault();
               handelSale();

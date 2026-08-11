@@ -1,4 +1,4 @@
-import type { Dispatch } from "react";
+import { type Dispatch } from "react";
 import Cards from "../components/Cards";
 import { motion } from "motion/react";
 import CategoryChart from "../components/charts/Donut";
@@ -8,31 +8,38 @@ import { LuReceipt } from "react-icons/lu";
 import Steps from "../components/charts/SalesChart";
 import BestSellingProducts from "../components/charts/TopSalesChart";
 import StockStatus from "../components/StockStatus";
+import RecentSales from "../components/RecentSales";
 
 interface Props {
   setShowForm: Dispatch<React.SetStateAction<boolean>>;
   setShowSaleForm: Dispatch<React.SetStateAction<boolean>>;
+  theme: string;
 }
-export default function Dashboard({ setShowForm, setShowSaleForm }: Props) {
+export default function Dashboard({
+  setShowForm,
+  setShowSaleForm,
+  theme,
+}: Props) {
   return (
     <motion.section
       className="pt-10 px-10 relative min-h-[90vh] dark:bg-[#000f16] "
       initial={{ opacity: 0 }}
       animate={{ opacity: 100 }}
     >
-      <h1 className="text-5xl mb-10 font-semibold dark:text-white">
+      <h1 className="text-5xl mb-5 font-semibold dark:text-white">
         لوحة التحكم
       </h1>
       <Cards />
       <section>
-        <div className="flex mt-10 items-center gap-10 outline-none focus:outline-none flex-wrap">
-          <Steps />
+        <div className="flex items-center gap-10 outline-none my-10 focus:outline-none flex-wrap max-xl:flex-col max-xl:items-stretch">
+          <Steps isDark={theme === "dark" ? true : false} />
           <CategoryChart />
         </div>
-        <div className="flex mt-10 items-center gap-10 outline-none focus:outline-none flex-wrap">
-          <BestSellingProducts />
+        <div className="flex items-center gap-10 outline-none my-10 focus:outline-none flex-wrap max-lg:flex-col max-lg:items-stretch">
+          <BestSellingProducts isDark={theme === "dark" ? true : false} />
           <StockStatus />
         </div>
+        <RecentSales />
       </section>
 
       <div
@@ -42,7 +49,7 @@ export default function Dashboard({ setShowForm, setShowSaleForm }: Props) {
     max-lg:static
     dark:border-[#1F2937]
     dark:bg-[#131B2E]
-    dark:shadow-black/20
+    dark:shadow-black/20 text-nowrap
   "
       >
         <h3 className="text-[#0b1c30] dark:text-white">إجراءات سريعة</h3>
@@ -63,6 +70,7 @@ export default function Dashboard({ setShowForm, setShowSaleForm }: Props) {
       "
             onClick={() => {
               setShowForm(true);
+              setShowSaleForm(false);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
@@ -85,6 +93,8 @@ export default function Dashboard({ setShowForm, setShowSaleForm }: Props) {
             onClick={() => {
               window.scrollTo({ top: 0, behavior: "smooth" });
               setShowSaleForm(true);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setShowForm(false);
             }}
           >
             <LuReceipt size={20} />

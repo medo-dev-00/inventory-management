@@ -51,20 +51,25 @@ export default function StockStatus() {
         حالة المخزون
       </h2>
 
-      <div className="space-y-6">
-        {stockStatus.map((status) => (
-          <div
-            key={status.label}
-            className={`
+      {products.length === 0 ? (
+        <p className="text-center py-10 text-slate-500 dark:text-slate-400 flex-1 p-10">
+          لا توجد مبيعات حتى الآن
+        </p>
+      ) : (
+        <div className="space-y-6">
+          {stockStatus.map((status) => (
+            <div
+              key={status.label}
+              className={`
               flex items-center justify-between
               rounded-lg px-7 py-7
               bg-slate-100 dark:bg-[#182136]
               ${status.border ? "border border-red-500" : ""}
             `}
-          >
-            {/* القيمة */}
-            <span
-              className={`
+            >
+              {/* القيمة */}
+              <span
+                className={`
                 text-3xl font-bold
                 ${
                   status.border
@@ -72,21 +77,22 @@ export default function StockStatus() {
                     : "text-slate-800 dark:text-white"
                 }
               `}
-            >
-              {status.value}
-            </span>
-
-            {/* الاسم + النقطة */}
-            <div className="flex items-center gap-4">
-              <span className="text-xl text-slate-700 dark:text-white">
-                {status.label}
+              >
+                {status.value}
               </span>
 
-              <span className={`size-5 rounded-full ${status.color}`} />
+              {/* الاسم + النقطة */}
+              <div className="flex items-center gap-4">
+                <span className="text-xl text-slate-700 dark:text-white">
+                  {status.label}
+                </span>
+
+                <span className={`size-5 rounded-full ${status.color}`} />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
