@@ -1,7 +1,7 @@
 import {
-  Area,
-  AreaChart,
   CartesianGrid,
+  Line,
+  LineChart,
   Tooltip,
   XAxis,
   YAxis,
@@ -46,7 +46,9 @@ export default function SalesChart() {
       (acc, sale) => {
         const date = new Date(sale.createdAt);
 
-        const key = date.toISOString().split("T")[0];
+        const key = `${date.getFullYear()}-${String(
+          date.getMonth() + 1,
+        ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
         if (!acc[key]) {
           acc[key] = {
@@ -66,34 +68,30 @@ export default function SalesChart() {
     ),
   );
 
-  const textColor = isDark ? "white" : "#004532";
+  const textColor = isDark ? "#CBD5E1" : "#475569";
   const gridColor = isDark ? "#334155" : "#CBD5E1";
-  const areaColor = isDark ? "#00A67D" : "#004532";
+  const lineColor = isDark ? "#00A67D" : "#004532";
 
   return (
-    <AreaChart
-      tabIndex={-99}
+    <LineChart
+      tabIndex={-1}
       style={{
-        width: "100%",
+        flex: 1,
         aspectRatio: 1.618,
-        maxWidth: 1200,
-        maxHeight: 600,
         outline: "none",
-        padding: 10,
       }}
       responsive
       data={chartData}
       margin={{
-        top: 20,
-        right: 20,
-        bottom: 5,
+        top: 10,
+        right: 30,
         left: 10,
+        bottom: 10,
       }}
     >
-      <CartesianGrid stroke={gridColor} strokeDasharray="4 4" tabIndex={-99} />
+      <CartesianGrid stroke={gridColor} strokeDasharray="4 5" />
 
       <XAxis
-        tabIndex={-99}
         dataKey="name"
         tickMargin={10}
         tick={{ fill: textColor }}
@@ -102,46 +100,47 @@ export default function SalesChart() {
       />
 
       <YAxis
-        tabIndex={-99}
-        width="auto"
-        tickMargin={30}
         tick={{ fill: textColor }}
         axisLine={{ stroke: gridColor }}
         tickLine={{ stroke: gridColor }}
+        tickMargin={10}
         label={{
           value: "جنيه",
           fill: textColor,
+          angle: -90,
         }}
       />
 
       <Tooltip
         contentStyle={{
-          backgroundColor: isDark ? "#FFFFFF" : "#eee",
+          backgroundColor: isDark ? "#131B2E" : "#FFFFFF",
           border: `1px solid ${gridColor}`,
           borderRadius: "8px",
           color: textColor,
-          boxShadow: isDark
-            ? "0 4px 15px rgba(0, 0, 0, 0.3)"
-            : "0 4px 15px rgba(0, 0, 0, 0.1)",
         }}
         labelStyle={{
-          color: "black",
+          color: textColor,
           marginBottom: "5px",
         }}
         itemStyle={{
-          color: isDark ? "#00A67D" : "#004532",
+          color: lineColor,
         }}
         formatter={(value) => [`${value} جنيه`, "المبيعات"]}
       />
 
-      <Area
+      <Line
         type="monotone"
         dataKey="sales"
-        stroke={areaColor}
-        fill={areaColor}
-        fillOpacity={isDark ? 0.3 : 0.2}
+        name="المبيعات"
+        stroke={lineColor}
         strokeWidth={3}
+        dot={false}
+        activeDot={{
+          r: 6,
+        }}
+        animationDuration={800}
+        animationEasing="ease-out"
       />
-    </AreaChart>
+    </LineChart>
   );
 }

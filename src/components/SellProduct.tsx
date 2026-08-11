@@ -35,7 +35,7 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
   // Products Context
   const { products, setProducts } = useProducts();
   // Sales Context
-  const { setSales } = useSales();
+  const { sales, setSales } = useSales();
   // Sales Context
 
   // Handle Sale
@@ -84,9 +84,11 @@ export default function AddSale({ showSaleForm, setShowSaleForm }: Props) {
       price: selectedProduct.sell_price,
       total: total,
       createdAt: new Date().toISOString(),
+      category: selectedProduct.category,
     };
-    setSales((prev: Sale[]) => [...prev, sale]);
-
+    const newSales: Sale[] = [...sales, sale];
+    setSales(newSales);
+    localStorage.setItem("sales", JSON.stringify(newSales));
     // Empty The States
     setSelectedProduct(null);
     setSaleQuantity(1);

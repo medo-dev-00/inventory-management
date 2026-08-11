@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LuReceipt } from "react-icons/lu";
-import type { Sale } from "../components/SellProduct";
+import { type Sale } from "../context/SalesContext";
 import { motion } from "motion/react";
 
 export default function SalesTable() {

@@ -100,7 +100,7 @@ function App() {
 
           <div className="relative w-full flex-1 h-full ">
             <Header setShowSettings={setShowSettings} />
-            <div className="relative max-w-500 mx-auto">
+            <div className="relative max-w-400 mx-auto">
               <Routes>
                 <Route
                   path="/dashboard"

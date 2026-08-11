@@ -6,7 +6,7 @@ import {
   LabelList,
   type LabelProps,
 } from "recharts";
-import { useProducts } from "../../hooks/useProducts";
+import { useSales } from "../../hooks/useSales";
 
 interface Cat {
   name: string;
@@ -40,9 +40,9 @@ const MyCustomLabel = (props: LabelProps) => (
 );
 
 export default function CategoryChart() {
-  const { products } = useProducts();
+  const { sales } = useSales();
   const data: Cat[] = Object.entries(
-    products.reduce<Record<string, number>>((acc, product) => {
+    sales.reduce<Record<string, number>>((acc, product) => {
       acc[product.category] = (acc[product.category] || 0) + 1;
       return acc;
     }, {}),
@@ -52,12 +52,12 @@ export default function CategoryChart() {
   }));
   const total = data.reduce((sum, item) => sum + item.value, 0);
   return (
-    <section className="max-w-80 card p-4 h-fit">
+    <section className="max-w-150 card p-4 h-fit flex-1">
       <h2 className="text-2xl dark:text-white">المنتجات حسب التصنيف</h2>
       <PieChart
         style={{
           width: "100%",
-          maxWidth: "400px",
+          maxWidth: "600px",
           maxHeight: "300px",
           aspectRatio: 1,
         }}
@@ -73,6 +73,8 @@ export default function CategoryChart() {
           outerRadius="70%"
           isAnimationActive
           shape={MyCustomPie}
+          stroke="none"
+          
         >
           <LabelList content={MyCustomLabel} />
         </Pie>

@@ -6,6 +6,8 @@ import CategoryChart from "../components/charts/Donut";
 import { FaPlus } from "react-icons/fa6";
 import { LuReceipt } from "react-icons/lu";
 import Steps from "../components/charts/SalesChart";
+import BestSellingProducts from "../components/charts/TopSalesChart";
+import StockStatus from "../components/StockStatus";
 
 interface Props {
   setShowForm: Dispatch<React.SetStateAction<boolean>>;
@@ -22,14 +24,20 @@ export default function Dashboard({ setShowForm, setShowSaleForm }: Props) {
         لوحة التحكم
       </h1>
       <Cards />
-      <section className="flex mt-10 items-center justify-around outline-none focus:outline-none">
-        <Steps />
-        <CategoryChart />
+      <section>
+        <div className="flex mt-10 items-center gap-10 outline-none focus:outline-none flex-wrap">
+          <Steps />
+          <CategoryChart />
+        </div>
+        <div className="flex mt-10 items-center gap-10 outline-none focus:outline-none flex-wrap">
+          <BestSellingProducts />
+          <StockStatus />
+        </div>
       </section>
 
       <div
         className="
-    fixed bottom-10 my-10 flex w-fit items-center
+    fixed bottom-10 my-10 right-5 flex w-fit items-center
     rounded-md border border-gray-300 bg-white p-5 shadow-md
     max-lg:static
     dark:border-[#1F2937]

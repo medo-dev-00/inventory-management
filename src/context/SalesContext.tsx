@@ -8,6 +8,7 @@ export interface Sale {
   price: number;
   total: number;
   createdAt: string;
+  category: string;
 }
 
 export interface ContextType {
