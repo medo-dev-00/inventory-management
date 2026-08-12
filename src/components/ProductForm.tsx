@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 
 // Icons
 import { MdOutlineInfo } from "react-icons/md";
@@ -8,21 +8,25 @@ import { IoImageOutline } from "react-icons/io5";
 import { TbCloudUpload } from "react-icons/tb";
 import type { Product } from "../context/ProductsContext";
 import { FaX } from "react-icons/fa6";
+import { useProducts } from "../hooks/useProducts";
 
 interface InfoType {
   productInfo: Product;
   setProductInfo: React.Dispatch<React.SetStateAction<Product>>;
 }
 export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
+  const { products } = useProducts();
   const [showCategoryInput, setShowCategoryInput] = useState<boolean>(false);
-  const [categories, setCategories] = useState<string[]>(() => {
-    const storageCategories = localStorage.getItem("categories");
+  const [categories, setCategories] = useState<string[]>([]);
 
-    if (storageCategories) {
-      return JSON.parse(storageCategories);
-    }
-    return [];
-  });
+  useEffect(() => {
+    const uniqueCategories = [
+      ...new Set(products.map((product) => product.category)),
+    ];
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCategories(uniqueCategories);
+  }, [products]);
   const [category, setCategory] = useState<string>("");
   function handleChanges(e: ChangeEvent<HTMLInputElement, HTMLInputElement>) {
     // Set Product Information
@@ -63,12 +67,11 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
       }));
     }
   }
-  function handleCategory(
-    e: ChangeEvent<HTMLSelectElement, HTMLSelectElement>,
-  ) {
+  function handleCategory(e: ChangeEvent<HTMLSelectElement>) {
     const value = e.target.value;
 
     if (value === "__new__") {
+      setCategory("");
       setShowCategoryInput(true);
       return;
     }
@@ -78,16 +81,28 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
       category: value,
     }));
   }
-  function handleCreate() {
-    const updatedCategories: string[] = [...categories, category];
-    setCategories(updatedCategories);
-    setShowCategoryInput(false);
-    setCategory("");
-    localStorage.setItem("categories", JSON.stringify(updatedCategories));
-    setProductInfo((prev: Product) => ({
+  function handleCreate(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+
+    const newCategory = category.trim();
+
+    if (!newCategory) return;
+
+    setCategories((prev) => {
+      if (prev.includes(newCategory)) {
+        return prev;
+      }
+
+      return [...prev, newCategory];
+    });
+
+    setProductInfo((prev) => ({
       ...prev,
-      category: category,
+      category: newCategory,
     }));
+
+    setCategory("");
+    setShowCategoryInput(false);
   }
   return (
     <form
@@ -138,19 +153,13 @@ export default function ProductForm({ productInfo, setProductInfo }: InfoType) {
               <div className="mt-4">
                 <div>
                   <select
-                    value={
-                      categories.includes(productInfo.category)
-                        ? productInfo.category
-                        : ""
-                    }
+                    value={productInfo.category}
                     onChange={handleCategory}
                     className="w-full bg-[#f8f9ff] p-2 border-[1.5px] border-[#bec9c264] rounded-sm dark:bg-[#001E2C] dark:border-gray-800 dark:text-white"
                   >
-                    {categories.length === 0 && (
-                      <option value="" disabled>
-                        لا توجد تصنيفات
-                      </option>
-                    )}
+                    <option value="" disabled>
+                      اختر التصنيف
+                    </option>
 
                     {categories.map((cat) => (
                       <option key={cat} value={cat}>

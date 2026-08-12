@@ -5,6 +5,7 @@ interface Sale {
   productName: string;
   quantity: number;
   total: number;
+  price: number;
   createdAt: string;
 }
 
@@ -52,7 +53,9 @@ export default function RecentSales() {
                 <th className="px-6 py-6 text-lg font-bold text-slate-700 dark:text-slate-300">
                   الكمية
                 </th>
-
+                <th className="px-6 py-6 text-lg font-bold text-slate-700 dark:text-slate-300">
+                  سعر القطعة
+                </th>
                 <th className="px-6 py-6 text-lg font-bold text-slate-700 dark:text-slate-300">
                   الإجمالي
                 </th>
@@ -78,7 +81,10 @@ export default function RecentSales() {
                   <td className="px-6 py-7 text-lg font-medium text-slate-700 dark:text-slate-300">
                     {sale.quantity}
                   </td>
-
+                  {/* Price */}
+                  <td className="px-6 py-7 text-lg font-medium text-slate-700 dark:text-slate-300">
+                    {sale.price}
+                  </td>
                   {/* Total */}
                   <td className="px-6 py-7 text-lg font-semibold text-slate-800 dark:text-slate-200">
                     {sale.total.toLocaleString("ar-EG")} ج.م

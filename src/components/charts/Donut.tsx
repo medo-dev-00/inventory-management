@@ -50,6 +50,7 @@ export default function CategoryChart() {
     name,
     value,
   }));
+  data.length = 6;
   const total = data.reduce((sum, item) => sum + item.value, 0);
   return (
     <section className=" card p-4 h-fit flex-1 max-xl:mx-auto w-full">
